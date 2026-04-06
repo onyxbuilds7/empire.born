@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>empire.born — The Architecture of Wealth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;600;800&family=Space+Mono&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #030303;
+      --text: #f0f0f0;
+      --dim: #555;
+      --glass: rgba(25, 25, 25, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-glow: rgba(255, 255, 255, 0.05);
+      --pure: #fff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none;
+    }
+
+    ::selection {
+      background: #fff;
+      color: #000;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      /* The global 3D variables */
+      --mx: 0.5;
+      --my: 0.5;
+      --scroll: 0;
+    }
+
+    /* Custom Cinematic Cursor */
+    .cursor-dot,
+    .cursor-outline {
+      position: fixed;
+      top: 0;
+      left: 0;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    .cursor-dot {
+      width: 4px;
+      height: 4px;
+      background: #fff;
+    }
+
+    .cursor-outline {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: width 0.2s, height 0.2s, border-color 0.2s;
+    }
+
+    body:hover .cursor-outline {
+      border-color: #fff;
+      width: 50px;
+      height: 50px;
+    }
+
+    /* Loader */
+    #loader {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 1.2s cubic-bezier(0.8, 0, 0.1, 1);
+    }
+
+    #loader.hide {
+      transform: translateY(-100%);
+    }
+
+    .loader-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .loader-text {
+      font-family: 'Space Mono', monospace;
+      font-size: 2rem;
+      color: #fff;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+    }
+
+    .loader-status {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: #666;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      animation: pulse 1s infinite alternate;
+    }
+
+    .loader-bar {
+      width: 240px;
+      height: 1px;
+      background: #222;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .loader-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background: #fff;
+      width: 0%;
+      transition: width 0.05s linear;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.5;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
+
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    .display {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+    }
+
+    .mono {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 30px 5vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+      mix-blend-mode: difference;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* 3D Container */
+    .scene {
+      width: 100vw;
+      height: 100vh;
+      perspective: 1000px;
+      perspective-origin: calc(var(--mx) * 100%) calc(var(--my) * 100%);
+      transform-style: preserve-3d;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Core 3D Object - Cash Pack */
+    .core {
+      position: relative;
+      width: 470px;
+      height: 50px;
+      transform-style: preserve-3d;
+      transform: rotateX(calc((var(--my) - 0.5) * -60deg + var(--scroll) * 1deg)) rotateY(calc((var(--mx) - 0.5) * 80deg + var(--scroll) * 0.5deg));
+      transition: transform 0.1s linear;
+    }
+
+    .plane {
+      position: absolute;
+      /* Simulated paper edges of a strap of cash */
+      background: repeating-linear-gradient(to bottom, #d6e0ce 0px, #a2bca8 1.5px, #7a9477 3px);
+      border: 1px solid rgba(0, 50, 20, 0.8);
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+    }
+
+    /* Front and Back (Long thin edges) */
+    .plane:nth-child(1) {
+      width: 470px;
+      height: 50px;
+      transform: translateZ(100px);
+    }
+
+    .plane:nth-child(2) {
+      width: 470px;
+      height: 50px;
+      transform: rotateY(180deg) translateZ(100px);
+    }
+
+    /* Left and Right (Short thin edges) */
+    .plane:nth-child(3) {
+      width: 200px;
+      height: 50px;
+      left: 50%;
+      margin-left: -100px;
+      transform: rotateY(90deg) translateZ(235px);
+    }
+
+    .plane:nth-child(4) {
+      width: 200px;
+      height: 50px;
+      left: 50%;
+      margin-left: -100px;
+      transform: rotateY(-90deg) translateZ(235px);
+    }
+
+    /* Top and Bottom (The Faces of the $100 Bills) */
+    .plane:nth-child(5) {
+      width: 470px;
+      height: 200px;
+      top: 50%;
+      margin-top: -100px;
+      transform: rotateX(90deg) translateZ(25px);
+      background-image: url('https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #1a3c20;
+    }
+
+    .plane:nth-child(6) {
+      width: 470px;
+      height: 200px;
+      top: 50%;
+      margin-top: -100px;
+      transform: rotateX(-90deg) translateZ(25px);
+      background-image: url('https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800');
+      background-size: cover;
+      background-position: center;
+      border: 1px solid #1a3c20;
+    }
+
+    /* Core inner glow - Reduced to show texture clearly */
+    .core::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 500px;
+      height: 250px;
+      background: #00ff66;
+      transform: translate(-50%, -50%) translateZ(-100px);
+      filter: blur(140px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    /* Content layers */
+    .content-wrapper {
+      position: relative;
+      z-index: 10;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 10vw;
+      position: relative;
+    }
+
+    .hero-content {
+      mix-blend-mode: difference;
+    }
+
+    h1 {
+      font-size: clamp(4rem, 12vw, 12rem);
+      line-height: 0.85;
+      margin-bottom: 2rem;
+      text-transform: uppercase;
+      background: linear-gradient(to right, #fff, #555);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .sub {
+      max-width: 400px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #aaa;
+      margin-bottom: 4rem;
+    }
+
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 10vh;
+    }
+
+    .pillar-item {
+      padding: 40px 30px;
+      border: 1px solid var(--glass-border);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(20px);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pillar-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #fff, transparent);
+      transform: translateX(-100%);
+      transition: 0.8s;
+    }
+
+    .pillar-item:hover {
+      transform: translateY(-10px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .pillar-item:hover::before {
+      transform: translateX(100%);
+    }
+
+    .p-title {
+      font-size: 1.8rem;
+      margin: 20px 0;
+      color: #fff;
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+    }
+
+    .p-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #888;
+    }
+
+    .manifesto {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .manifesto h2 {
+      font-size: clamp(2.5rem, 4vw, 5rem);
+      line-height: 1.1;
+      margin-bottom: 30px;
+      color: #fff;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #333;
+    }
+
+    @media (max-width: 900px) {
+      .pillars {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 4rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Custom Cursor -->
+  <div class="cursor-dot" id="cursor-dot"></div>
+  <div class="cursor-outline" id="cursor-outline"></div>
+
+  <!-- Boot Loader -->
+  <div id="loader">
+    <div class="loader-box">
+      <div class="loader-status" id="loader-status">INITIALIZING SYSTEM</div>
+      <div class="loader-bar">
+        <div class="loader-fill" id="loader-fill"></div>
+      </div>
+      <div class="loader-text" id="loader-perc">000</div>
+    </div>
+  </div>
+
+  <nav>
+    <div class="logo">EMPIRE.BORN</div>
+    <div class="mono">ARCHITECTURE</div>
+  </nav>
+
+  <!-- Procedural 3D Background -->
+  <div class="scene">
+    <div class="core">
+      <div class="plane"></div>
+      <div class="plane"></div>
+      <div class="plane"></div>
+      <div class="plane"></div>
+      <div class="plane"></div>
+      <div class="plane"></div>
+    </div>
+  </div>
+
+  <div class="content-wrapper">
+    <section class="hero-content">
+      <div class="mono" style="margin-bottom: 2rem;">Initiate System</div>
+      <h1 class="display">Elite<br>Paradigm.</h1>
+      <p class="sub">Zero images. Zero gold. Pure, unapologetic spatial architecture. We build systems of discipline for
+        those who demand the highest standard.</p>
+    </section>
+
+    <section>
+      <div class="mono" style="margin-bottom: 2rem;">The Framework</div>
+      <div class="pillars">
+        <div class="pillar-item">
+          <div class="mono">01 // Logic</div>
+          <div class="p-title">Cold Calculation</div>
+          <div class="p-body">Emotion is a liability. Architecture demands pure, cold precision. We teach the algorithms
+            of absolute control.</div>
+        </div>
+        <div class="pillar-item">
+          <div class="mono">02 // Force</div>
+          <div class="p-title">Kinetic Discipline</div>
+          <div class="p-body">Momentum generated through relentless, unyielding action. A framework forged in pressure
+            and perfected in silence.</div>
+        </div>
+        <div class="pillar-item">
+          <div class="mono">03 // Time</div>
+          <div class="p-title">Infinite Horizon</div>
+          <div class="p-body">We do not build for tomorrow. We construct titanium structures designed to outlast
+            biological limitations.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="manifesto">
+      <h2 class="display">"Perfection is achieved not when there is nothing more to add, but when there is nothing left
+        to take away."</h2>
+      <div class="mono">Join the absolute standard.</div>
+    </section>
+  </div>
+
+  <!-- JS Scripts for Spatial UI and UX Animations -->
+  <script>
+    // Boot Sequence
+    let perc = 0;
+    const loaderPerc = document.getElementById('loader-perc');
+    const loaderFill = document.getElementById('loader-fill');
+    const loaderStatus = document.getElementById('loader-status');
+    const loader = document.getElementById('loader');
+
+    const statuses = [
+      "SECURING ASSETS",
+      "UPLOADING CAPITAL",
+      "RENDERING WEALTH",
+      "SYSTEM ONLINE"
+    ];
+
+    let bootInterval = setInterval(() => {
+      // Non-linear booting
+      perc += Math.floor(Math.random() * 6) + 1;
+      if (perc > 100) perc = 100;
+
+      // Update UI
+      loaderPerc.innerText = perc.toString().padStart(3, '0');
+      loaderFill.style.width = `${perc}%`;
+
+      // Update Status Text based on %
+      if (perc < 30) loaderStatus.innerText = statuses[0];
+      else if (perc < 65) loaderStatus.innerText = statuses[1];
+      else if (perc < 95) loaderStatus.innerText = statuses[2];
+      else loaderStatus.innerText = statuses[3];
+
+      if (perc === 100) {
+        clearInterval(bootInterval);
+        setTimeout(() => { loader.classList.add('hide'); }, 600); // slight pause before opening
+      }
+    }, 35);
+
+    // Custom Cursor Engine
+    const dot = document.getElementById('cursor-dot');
+    const outline = document.getElementById('cursor-outline');
+    let curX = window.innerWidth / 2;
+    let curY = window.innerHeight / 2;
+    let outX = curX;
+    let outY = curY;
+
+    // JS Spatial Engine & Cursor Coordinates
+    let mouseX = 0.5;
+    let mouseY = 0.5;
+    let targetX = 0.5;
+    let targetY = 0.5;
+
+    window.addEventListener('mousemove', (e) => {
+      // Global Tracking
+      targetX = e.clientX / window.innerWidth;
+      targetY = e.clientY / window.innerHeight;
+
+      // Cursor Pos Tracker
+      curX = e.clientX;
+      curY = e.clientY;
+      dot.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
+
+      // Interactive Hover check for Cursor expansion
+      const hovered = document.elementFromPoint(curX, curY);
+      if (hovered && (hovered.tagName === 'A' || hovered.closest('.pillar-item'))) {
+        outline.style.width = '60px'; outline.style.height = '60px';
+        outline.style.borderColor = '#fff';
+      } else {
+        outline.style.width = '40px'; outline.style.height = '40px';
+        outline.style.borderColor = 'rgba(255,255,255,0.3)';
+      }
+    });
+
+    window.addEventListener('scroll', () => {
+      document.body.style.setProperty('--scroll', window.scrollY);
+    });
+
+    // Smooth animation loop for perspective and cursor trailing
+    function animate() {
+      // 3D Engine Lerp
+      mouseX += (targetX - mouseX) * 0.05;
+      mouseY += (targetY - mouseY) * 0.05;
+      document.body.style.setProperty('--mx', mouseX.toFixed(3));
+      document.body.style.setProperty('--my', mouseY.toFixed(3));
+
+      // Cursor Outline trailing Lerp
+      outX += (curX - outX) * 0.15;
+      outY += (curY - outY) * 0.15;
+      outline.style.transform = `translate(${outX}px, ${outY}px) translate(-50%, -50%)`;
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+
+</html>
