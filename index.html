@@ -14,141 +14,84 @@
   <meta property="og:image" content="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1200">
   <meta name="twitter:card" content="summary_large_image">
   
-  <!-- Instagram Deep Link Support -->
-  <meta property="al:ios:app_name" content="Instagram">
-  <meta property="al:ios:url" content="instagram://user?username=empire.born">
-  <meta property="al:android:app_name" content="Instagram">
-  <meta property="al:android:url" content="instagram://user?username=empire.born">
-  <meta property="al:web:url" content="https://instagram.com/empire.born">
-  
   <title>empire.born — The Architecture of Wealth</title>
   
-  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
-    /* ===== CSS VARIABLES & BASE ===== */
     :root {
-      /* Colors */
       --bg: #030303;
       --bg-elev: #0a0a0a;
-      --text: #f0f0f0;
-      --text-dim: #888;
-      --text-muted: #555;
+      --text: #ffffff;
+      --text-dim: #888888;
+      --text-muted: #444444;
       --accent: #00ff66;
       --accent-glow: rgba(0, 255, 102, 0.15);
       --gold-start: #BF953F;
       --gold-mid: #FCF6BA;
       --gold-end: #AA771C;
-      --dollar-green: #1a4d2e;
-      --dollar-dark: #0d1f17;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.2);
       
-      /* Glass */
-      --glass: rgba(20, 20, 20, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-border-hover: rgba(255, 255, 255, 0.25);
-      --glass-glow: rgba(255, 255, 255, 0.03);
-      
-      /* 3D Core */
       --mx: 0.5;
       --my: 0.5;
       --scroll: 0;
       --morph: 0;
-      --pulse: 0;
-      --rotation: 0;
       
-      /* Dimensions - Realistic $100 bill stack */
-      --w-start: 420px; --h-start: 180px; --d-start: 80px;
-      --w-end: 280px; --h-end: 120px; --d-end: 100px;
+      --w-start: 400px; --h-start: 170px; --d-start: 70px;
+      --w-end: 260px; --h-end: 110px; --d-end: 90px;
       --cw: calc(var(--w-start) + (var(--w-end) - var(--w-start)) * var(--morph));
       --ch: calc(var(--h-start) + (var(--h-end) - var(--h-start)) * var(--morph));
       --cd: calc(var(--d-start) + (var(--d-end) - var(--d-start)) * var(--morph));
-      
-      /* Easing */
-      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-      
-      /* Spacing */
-      --section-pad: clamp(3rem, 8vw, 6rem);
-      --container-pad: clamp(1.5rem, 4vw, 3rem);
     }
 
-    /* ===== RESET & BASE ===== */
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    
-    ::selection { background: var(--accent); color: #000; }
     
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
       }
     }
     
-    html {
-      scroll-behavior: smooth;
-      -webkit-text-size-adjust: 100%;
-    }
+    html { scroll-behavior: smooth; }
     
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
       min-height: 100vh;
-      padding-top: env(safe-area-inset-top);
-      padding-bottom: env(safe-area-inset-bottom);
     }
 
-    /* ===== NOISE OVERLAY ===== */
+    /* ===== NOISE ===== */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
       z-index: 9999;
       pointer-events: none;
-      opacity: 0.025;
+      opacity: 0.03;
       background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-      animation: noiseShift 20s steps(1) infinite;
-    }
-    
-    @keyframes noiseShift {
-      0%, 100% { transform: translate(0, 0); }
-      10% { transform: translate(-1%, -1%); }
-      20% { transform: translate(1%, 1%); }
-      30% { transform: translate(-1%, 1%); }
-      40% { transform: translate(1%, -1%); }
-      50% { transform: translate(-1%, 0); }
-      60% { transform: translate(1%, 0); }
-      70% { transform: translate(0, -1%); }
-      80% { transform: translate(0, 1%); }
-      90% { transform: translate(-1%, 1%); }
     }
 
     /* ===== TYPOGRAPHY ===== */
     .display {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      letter-spacing: -0.03em;
-      line-height: 0.95;
+      letter-spacing: -0.04em;
+      line-height: 0.9;
     }
     
     .mono {
       font-family: 'Space Mono', monospace;
-      font-size: clamp(0.6rem, 2vw, 0.7rem);
-      letter-spacing: 0.15em;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
       text-transform: uppercase;
       color: var(--text-muted);
-      font-weight: 400;
-    }
-    
-    h1, h2, h3 {
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
     }
 
     /* ===== LOADER ===== */
@@ -160,62 +103,44 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 1s var(--ease-out);
-      will-change: transform;
+      transition: transform 1s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    #loader.hide {
-      transform: translateY(-100%);
-    }
+    #loader.hide { transform: translateY(-100%); }
     
-    .loader-box {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
-      padding: 2rem;
+    .loader-content {
       text-align: center;
     }
     
     .loader-text {
       font-family: 'Space Mono', monospace;
-      font-size: clamp(1.2rem, 4vw, 1.6rem);
-      color: #fff;
-      letter-spacing: 0.08em;
-      font-weight: 700;
-    }
-    
-    .loader-status {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
+      font-size: 0.7rem;
       color: var(--text-muted);
-      letter-spacing: 0.35em;
-      text-transform: uppercase;
-      animation: pulse 1.5s infinite alternate;
+      letter-spacing: 0.3em;
+      margin-bottom: 2rem;
+      animation: pulse 2s infinite;
     }
     
     .loader-bar {
-      width: clamp(180px, 50vw, 260px);
-      height: 2px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 1px;
-      overflow: hidden;
+      width: 200px;
+      height: 1px;
+      background: var(--border);
       position: relative;
+      overflow: hidden;
     }
     
     .loader-fill {
       position: absolute;
-      top: 0; left: 0;
+      left: 0; top: 0;
       height: 100%;
-      background: linear-gradient(90deg, var(--accent), #fff);
+      background: var(--accent);
       width: 0%;
       transition: width 0.1s linear;
-      box-shadow: 0 0 20px var(--accent-glow);
     }
     
     @keyframes pulse {
-      0% { opacity: 0.4; }
-      100% { opacity: 1; }
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
     }
 
     /* ===== NAV ===== */
@@ -223,870 +148,704 @@
       position: fixed;
       top: 0;
       width: 100%;
-      padding: clamp(0.8rem, 3vw, 1.5rem) var(--container-pad);
+      padding: 2rem 3rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
       mix-blend-mode: difference;
-      pointer-events: none;
     }
-    
-    nav > * { pointer-events: auto; }
     
     .logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      font-size: 1rem;
       letter-spacing: -0.02em;
-      position: relative;
       cursor: pointer;
     }
     
-    .logo::after {
-      content: '';
-      position: absolute;
-      bottom: -3px; left: 0;
-      width: 100%; height: 1px;
-      background: var(--accent);
-      transform: scaleX(0);
-      transform-origin: right;
-      transition: transform 0.4s var(--ease-out);
+    .nav-link {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text);
+      text-decoration: none;
+      transition: opacity 0.3s;
     }
     
-    .logo:hover::after {
-      transform: scaleX(1);
-      transform-origin: left;
-    }
+    .nav-link:hover { opacity: 0.6; }
 
-    /* ===== PROGRESS BAR ===== */
-    .progress-bar {
+    /* ===== PROGRESS ===== */
+    .progress {
       position: fixed;
       top: 0; left: 0;
-      height: 2px;
-      background: linear-gradient(90deg, var(--accent), transparent);
+      height: 1px;
+      background: var(--accent);
       z-index: 1000;
       transform-origin: left;
-      transition: transform 0.1s linear;
-      will-change: transform;
+      transition: transform 0.1s;
     }
 
-    /* ===== 3D SCENE ENHANCED ===== */
+    /* ===== 3D SCENE ===== */
     .scene {
-      width: 100vw;
-      height: 100vh;
-      perspective: 1400px;
+      position: fixed;
+      inset: 0;
+      perspective: 1200px;
       perspective-origin: calc(var(--mx) * 100%) calc(var(--my) * 100%);
-      transform-style: preserve-3d;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: fixed;
-      inset: 0;
       pointer-events: none;
       z-index: 0;
-      will-change: transform;
     }
     
-    /* Responsive 3D scaling */
-    @media (max-width: 1024px) { .scene { perspective: 1000px; } }
-    @media (max-width: 768px) { .scene { perspective: 800px; } }
-    @media (max-width: 480px) { .scene { perspective: 600px; } }
-
     .core {
       position: relative;
       width: var(--cw);
       height: var(--cd);
       transform-style: preserve-3d;
-      transform: rotateX(calc((var(--my) - 0.5) * -45deg + var(--scroll) * 0.06deg)) 
-                 rotateY(calc((var(--mx) - 0.5) * 60deg + var(--scroll) * 0.03deg + var(--rotation)));
+      transform: rotateX(calc((var(--my) - 0.5) * -40deg)) 
+                 rotateY(calc((var(--mx) - 0.5) * 50deg));
       transition: transform 0.1s linear;
-      will-change: transform;
     }
-
+    
     .plane {
       position: absolute;
-      transition: background 0.4s var(--ease-smooth);
-      overflow: hidden;
       backface-visibility: hidden;
-      -webkit-backface-visibility: hidden;
     }
-
-    /* ===== REALISTIC $100 BILL TEXTURE ===== */
+    
     .dollar-tex {
       position: absolute;
       inset: 0;
-      background: 
-        linear-gradient(135deg, var(--dollar-dark) 0%, var(--dollar-green) 50%, var(--dollar-dark) 100%);
+      background: linear-gradient(135deg, #0d1f17 0%, #1a4d2e 50%, #0d1f17 100%);
       opacity: calc(1 - var(--morph));
-      transition: opacity 0.6s var(--ease-smooth);
-      overflow: hidden;
+      transition: opacity 0.6s;
     }
     
-    /* Bill border frame */
     .dollar-tex::before {
       content: '';
       position: absolute;
-      inset: 6px;
-      border: 3px solid rgba(191, 149, 63, 0.6);
-      background: 
-        repeating-linear-gradient(
-          to bottom,
-          transparent 0px,
-          rgba(26, 77, 46, 0.8) 1px,
-          transparent 2px
-        );
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+      inset: 5px;
+      border: 2px solid rgba(191, 149, 63, 0.5);
     }
     
-    /* Gold accents and details */
     .dollar-tex::after {
       content: '100';
       position: absolute;
-      top: 50%;
-      left: 50%;
+      top: 50%; left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Syne', sans-serif;
-      font-size: clamp(2.5rem, 10vw, 5rem);
+      font-size: 3rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C);
+      background: linear-gradient(135deg, #BF953F, #FCF6BA);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 0.15em;
-      opacity: 0.9;
-      text-shadow: 0 0 40px rgba(191, 149, 63, 0.5);
     }
     
-    /* Corner decorations */
-    .dollar-tex .corner {
-      position: absolute;
-      width: 40px;
-      height: 40px;
-      border: 2px solid rgba(191, 149, 63, 0.7);
-    }
-    
-    .dollar-tex .corner-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
-    .dollar-tex .corner-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
-    .dollar-tex .corner-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
-    .dollar-tex .corner-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
-
-    /* ===== GOLD BAR TEXTURE ===== */
     .gold-tex {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, 
-        var(--gold-start) 0%, 
-        var(--gold-mid) 20%, 
-        var(--gold-end) 40%, 
-        var(--gold-mid) 60%, 
-        var(--gold-start) 80%, 
-        var(--gold-end) 100%);
-      background-size: 400% 400%;
-      animation: goldShimmer 10s infinite ease-in-out;
+      background: linear-gradient(135deg, var(--gold-start), var(--gold-mid), var(--gold-end));
+      background-size: 300% 300%;
+      animation: shimmer 8s infinite;
       opacity: var(--morph);
-      transition: opacity 0.6s var(--ease-smooth);
-      box-shadow: 
-        inset 0 0 40px rgba(0,0,0,0.5),
-        inset 0 0 80px rgba(191, 149, 63, 0.3),
-        0 0 60px rgba(191, 149, 63, 0.25);
+      transition: opacity 0.6s;
+      box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
     }
     
-    /* Gold bar engraving */
-    .gold-tex::before {
-      content: '999.9 FINE GOLD';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(0.5rem, 2vw, 0.8rem);
-      font-weight: 700;
-      color: rgba(120, 90, 30, 0.6);
-      letter-spacing: 0.2em;
-      border: 1px solid rgba(120, 90, 30, 0.4);
-      padding: 0.4rem 0.8rem;
-      border-radius: 2px;
-    }
-    
-    @keyframes goldShimmer {
+    @keyframes shimmer {
       0%, 100% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
     }
-
-    /* ===== EDGE TEXTURES (Stacked Bills) ===== */
+    
     .edge-tex {
-      background: repeating-linear-gradient(
-        to bottom,
-        #c5d5c8 0px,
-        #a2bca8 1.2px,
-        #7a9477 2.4px,
-        #5a7a5a 3.6px
-      );
-      transition: filter 0.6s;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
+      background: repeating-linear-gradient(to bottom, #c5d5c8 0px, #7a9477 2px);
     }
     
-    .gold-edge-tex {
+    .gold-edge {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, var(--gold-end), var(--gold-start), var(--gold-end));
+      background: linear-gradient(135deg, var(--gold-end), var(--gold-start));
       opacity: var(--morph);
       transition: opacity 0.6s;
-      box-shadow: inset 0 0 30px rgba(0,0,0,0.4);
-    }
-
-    /* Plane positioning */
-    .plane:nth-child(1) { /* Front */
-      width: var(--cw); height: var(--cd);
-      transform: translateZ(calc(var(--ch) / 2));
-    }
-    .plane:nth-child(2) { /* Back */
-      width: var(--cw); height: var(--cd);
-      transform: rotateY(180deg) translateZ(calc(var(--ch) / 2));
-    }
-    .plane:nth-child(3) { /* Left */
-      width: var(--ch); height: var(--cd);
-      left: 50%; margin-left: calc(var(--ch) / -2);
-      transform: rotateY(90deg) translateZ(calc(var(--cw) / 2));
-    }
-    .plane:nth-child(4) { /* Right */
-      width: var(--ch); height: var(--cd);
-      left: 50%; margin-left: calc(var(--ch) / -2);
-      transform: rotateY(-90deg) translateZ(calc(var(--cw) / 2));
-    }
-    .plane:nth-child(5) { /* Top */
-      width: var(--cw); height: var(--ch);
-      top: 50%; margin-top: calc(var(--ch) / -2);
-      transform: rotateX(90deg) translateZ(calc(var(--cd) / 2));
-    }
-    .plane:nth-child(6) { /* Bottom */
-      width: var(--cw); height: var(--ch);
-      top: 50%; margin-top: calc(var(--ch) / -2);
-      transform: rotateX(-90deg) translateZ(calc(var(--cd) / 2));
-    }
-
-    /* ===== ENHANCED CORE GLOW & PARTICLES ===== */
-    .core::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: clamp(280px, 50vw, 450px);
-      height: clamp(140px, 25vw, 220px);
-      background: var(--accent);
-      transform: translate(-50%, -50%) translateZ(-180px);
-      filter: blur(clamp(100px, 25vw, 160px));
-      opacity: calc(0.1 + var(--pulse) * 0.1);
-      pointer-events: none;
-      animation: glowPulse 5s infinite ease-in-out;
-      will-change: opacity;
     }
     
-    @keyframes glowPulse {
-      0%, 100% { opacity: 0.1; transform: translate(-50%, -50%) translateZ(-180px) scale(1); }
-      50% { opacity: 0.2; transform: translate(-50%, -50%) translateZ(-180px) scale(1.1); }
-    }
-
-    /* ===== FLOATING PARTICLES ===== */
-    .particles {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-    
-    .particle {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: var(--accent);
-      border-radius: 50%;
-      opacity: 0.4;
-      animation: float 20s infinite linear;
-      box-shadow: 0 0 10px var(--accent);
-    }
-    
-    .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; animation-duration: 25s; }
-    .particle:nth-child(2) { left: 20%; top: 60%; animation-delay: 2s; animation-duration: 30s; }
-    .particle:nth-child(3) { left: 35%; top: 40%; animation-delay: 4s; animation-duration: 22s; }
-    .particle:nth-child(4) { left: 50%; top: 80%; animation-delay: 1s; animation-duration: 28s; }
-    .particle:nth-child(5) { left: 65%; top: 30%; animation-delay: 3s; animation-duration: 26s; }
-    .particle:nth-child(6) { left: 80%; top: 70%; animation-delay: 5s; animation-duration: 24s; }
-    .particle:nth-child(7) { left: 90%; top: 50%; animation-delay: 2.5s; animation-duration: 27s; }
-    .particle:nth-child(8) { left: 15%; top: 85%; animation-delay: 4.5s; animation-duration: 23s; }
-    
-    @keyframes float {
-      0% { transform: translateY(0) translateX(0); opacity: 0; }
-      10% { opacity: 0.4; }
-      90% { opacity: 0.4; }
-      100% { transform: translateY(-100vh) translateX(50px); opacity: 0; }
-    }
+    .plane:nth-child(1) { width: var(--cw); height: var(--cd); transform: translateZ(calc(var(--ch) / 2)); }
+    .plane:nth-child(2) { width: var(--cw); height: var(--cd); transform: rotateY(180deg) translateZ(calc(var(--ch) / 2)); }
+    .plane:nth-child(3) { width: var(--ch); height: var(--cd); left: 50%; margin-left: calc(var(--ch) / -2); transform: rotateY(90deg) translateZ(calc(var(--cw) / 2)); }
+    .plane:nth-child(4) { width: var(--ch); height: var(--cd); left: 50%; margin-left: calc(var(--ch) / -2); transform: rotateY(-90deg) translateZ(calc(var(--cw) / 2)); }
+    .plane:nth-child(5) { width: var(--cw); height: var(--ch); top: 50%; margin-top: calc(var(--ch) / -2); transform: rotateX(90deg) translateZ(calc(var(--cd) / 2)); }
+    .plane:nth-child(6) { width: var(--cw); height: var(--ch); top: 50%; margin-top: calc(var(--ch) / -2); transform: rotateX(-90deg) translateZ(calc(var(--cd) / 2)); }
 
     /* ===== CONTENT ===== */
-    .content-wrapper {
+    .content {
       position: relative;
       z-index: 10;
     }
     
     section {
       min-height: 100vh;
+      padding: clamp(4rem, 10vh, 8rem) clamp(1.5rem, 5vw, 4rem);
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: var(--section-pad) var(--container-pad);
-      position: relative;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      max-width: 1000px;
     }
     
-    .hero-content {
-      mix-blend-mode: difference;
-      max-width: 800px;
+    .hero-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .hero-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 200px;
     }
     
     h1 {
-      font-size: clamp(2.2rem, 10vw, 7rem);
-      margin: 0.8rem 0 1.8rem;
-      background: linear-gradient(135deg, #fff 0%, #aaa 50%, #fff 100%);
-      background-size: 200% auto;
+      font-size: clamp(3rem, 12vw, 9rem);
+      line-height: 0.85;
+      margin-bottom: 2rem;
+      background: linear-gradient(135deg, #fff 0%, #666 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      animation: textShine 8s linear infinite;
     }
     
-    @keyframes textShine {
-      to { background-position: 200% center; }
-    }
-    
-    .sub {
-      max-width: 420px;
-      font-size: clamp(0.85rem, 2.2vw, 1rem);
-      line-height: 1.65;
+    .hero-sub {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      line-height: 1.7;
       color: var(--text-dim);
-      margin-bottom: 2.5rem;
-    }
-
-    /* ===== PILLARS ===== */
-    .pillars {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: clamp(1.2rem, 3.5vw, 2rem);
-      margin-top: 5vh;
+      max-width: 450px;
+      margin-bottom: 3rem;
     }
     
-    .pillar-item {
-      padding: clamp(1.2rem, 3.5vw, 2rem);
-      border: 1px solid var(--glass-border);
-      background: var(--glass);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 4px;
-      transition: all 0.4s var(--ease-out);
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 1rem 2rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
     }
     
-    .pillar-item::before {
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--text);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: -1;
+    }
+    
+    .btn:hover::before {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+    
+    .btn:hover {
+      color: var(--bg);
+      border-color: var(--text);
+    }
+    
+    .btn-primary {
+      background: var(--text);
+      color: var(--bg);
+      border-color: var(--text);
+    }
+    
+    .btn-primary::before {
+      background: var(--accent);
+    }
+    
+    .btn-primary:hover {
+      color: var(--bg);
+    }
+
+    /* ===== SECTION TITLES ===== */
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      display: inline-block;
+    }
+
+    /* ===== GRID SHOWCASE (Secret Level style) ===== */
+    .showcase-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      margin-top: 3rem;
+    }
+    
+    .showcase-item {
+      background: var(--bg);
+      padding: 3rem 2rem;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .showcase-item::before {
       content: '';
       position: absolute;
       top: 0; left: 0;
-      width: 100%; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--accent), transparent);
-      transform: translateX(-100%);
-      transition: transform 0.6s var(--ease-out);
+      width: 100%; height: 100%;
+      background: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: 0;
     }
     
-    .pillar-item:hover {
-      transform: translateY(-5px);
-      border-color: var(--glass-border-hover);
-      box-shadow: 
-        0 15px 50px rgba(0, 0, 0, 0.5),
-        0 0 30px var(--accent-glow);
+    .showcase-item:hover::before {
+      opacity: 0.05;
     }
     
-    .pillar-item:hover::before {
-      transform: translateX(100%);
+    .showcase-item > * {
+      position: relative;
+      z-index: 1;
     }
     
-    .p-title {
-      font-size: clamp(1.2rem, 3.5vw, 1.6rem);
-      margin: 1rem 0 0.6rem;
-      color: #fff;
+    .showcase-item:hover {
+      background: var(--bg-elev);
+    }
+    
+    .showcase-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+    
+    .showcase-title {
       font-family: 'Syne', sans-serif;
+      font-size: clamp(1.3rem, 3vw, 1.8rem);
       font-weight: 700;
+      margin-bottom: 0.8rem;
+      line-height: 1.1;
     }
     
-    .p-body {
-      font-size: clamp(0.8rem, 2vw, 0.9rem);
-      line-height: 1.65;
+    .showcase-desc {
+      font-size: 0.9rem;
       color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ===== SPECS (Oryzo style) ===== */
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-top: 4rem;
+    }
+    
+    .spec-item {
+      padding: 2rem;
+      border: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    
+    .spec-item:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+    }
+    
+    .spec-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    
+    .spec-value {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.5rem, 4vw, 2.2rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .spec-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ===== TIERS (Oryzo style) ===== */
+    .tiers {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      margin-top: 3rem;
+      border: 1px solid var(--border);
+    }
+    
+    .tier {
+      background: var(--bg);
+      padding: 3rem 2rem;
+      position: relative;
+      transition: all 0.3s;
+    }
+    
+    .tier:hover {
+      background: var(--bg-elev);
+    }
+    
+    .tier-badge {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      padding: 0.3rem 0.6rem;
+      border: 1px solid var(--border);
+    }
+    
+    .tier-badge.featured {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    
+    .tier-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    
+    .tier-desc {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 2rem;
+      line-height: 1.6;
+    }
+    
+    .tier-specs {
+      list-style: none;
+    }
+    
+    .tier-specs li {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .tier-specs li:last-child {
+      border-bottom: none;
     }
 
     /* ===== MANIFESTO ===== */
     .manifesto {
       text-align: center;
-      max-width: 750px;
+      max-width: 800px;
       margin: 0 auto;
-      padding: 1.5rem 0;
     }
     
     .manifesto h2 {
-      font-size: clamp(1.6rem, 5vw, 3.5rem);
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 6vw, 4rem);
+      font-weight: 700;
       line-height: 1.15;
-      margin-bottom: 1.2rem;
-      color: #fff;
+      margin-bottom: 2rem;
+    }
+    
+    .manifesto-quote {
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      line-height: 1.7;
+      color: var(--text-dim);
+      font-style: italic;
     }
 
-    /* ===== CTA BUTTON ===== */
-    .cta-btn {
-      padding: clamp(0.8rem, 2.5vw, 1.1rem) clamp(1.8rem, 5vw, 2.5rem);
-      background: #fff;
-      color: #000;
-      border: none;
-      border-radius: 2px;
-      font-family: 'Space Mono', monospace;
-      font-size: clamp(0.7rem, 2.2vw, 0.8rem);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.3s var(--ease-out);
-      margin-top: 2rem;
-      position: relative;
-      overflow: hidden;
-      text-decoration: none;
-      display: inline-block;
+    /* ===== FOOTER CTA ===== */
+    .footer-cta {
+      text-align: center;
+      padding: 6rem 2rem;
     }
     
-    .cta-btn::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, var(--accent), #fff);
+    .footer-cta h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 7vw, 5rem);
+      font-weight: 800;
+      margin-bottom: 2rem;
+      line-height: 1;
+    }
+    
+    .footer-cta p {
+      color: var(--text-dim);
+      margin-bottom: 3rem;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      nav { padding: 1.5rem; }
+      .showcase-grid { grid-template-columns: 1fr; }
+      .tiers { grid-template-columns: 1fr; }
+      .cta-group { flex-direction: column; }
+      .btn { width: 100%; text-align: center; }
+    }
+
+    /* ===== REVEAL ANIMATION ===== */
+    .reveal {
       opacity: 0;
-      transition: opacity 0.3s;
-      z-index: -1;
+      transform: translateY(30px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    .cta-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(0, 255, 102, 0.3);
-    }
-    
-    .cta-btn:hover::before {
+    .reveal.active {
       opacity: 1;
-    }
-    
-    .cta-btn:active {
       transform: translateY(0);
     }
-
-    /* ===== INSTAGRAM LINK STYLES ===== */
-    .instagram-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text);
-      text-decoration: none;
-      transition: all 0.3s var(--ease-out);
-      padding: 0.4rem 0.8rem;
-      border-radius: 4px;
-    }
-    
-    .instagram-link:hover {
-      color: var(--accent);
-      background: rgba(0, 255, 102, 0.05);
-    }
-    
-    .instagram-icon {
-      width: 18px;
-      height: 18px;
-      fill: currentColor;
-    }
-
-    /* ===== SCROLL INDICATOR ===== */
-    .scroll-indicator {
-      position: fixed;
-      bottom: clamp(0.8rem, 3vw, 1.5rem);
-      right: clamp(0.8rem, 3vw, 1.5rem);
-      width: 36px; height: 36px;
-      border: 1px solid var(--glass-border);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      opacity: 0.6;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    
-    .scroll-indicator.visible {
-      opacity: 1;
-      pointer-events: auto;
-      cursor: pointer;
-    }
-    
-    .scroll-indicator::after {
-      content: '';
-      width: 1px; height: 10px;
-      background: var(--text);
-      animation: scrollBounce 2s infinite;
-    }
-    
-    @keyframes scrollBounce {
-      0%, 100% { transform: translateY(0); opacity: 1; }
-      50% { transform: translateY(5px); opacity: 0.5; }
-    }
-
-    /* ===== RESPONSIVE ADJUSTMENTS ===== */
-    @media (max-width: 768px) {
-      nav { padding: 0.8rem var(--container-pad); }
-      section { padding: var(--section-pad) var(--container-pad); }
-      .pillars { grid-template-columns: 1fr; }
-      .manifesto { padding: 1rem 0; }
-    }
-    
-    @media (max-width: 480px) {
-      :root {
-        --w-start: 300px; --h-start: 130px; --d-start: 60px;
-        --w-end: 220px; --h-end: 95px; --d-end: 75px;
-      }
-      h1 { font-size: clamp(2rem, 12vw, 4rem); }
-      .sub { font-size: 0.85rem; }
-      .pillar-item { padding: 1.2rem; }
-    }
-
-    /* ===== CUSTOM SCROLLBAR ===== */
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb {
-      background: linear-gradient(var(--bg), #333, var(--bg));
-      border-radius: 3px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: #444; }
-
-    /* ===== ACCESSIBILITY ===== */
-    @media (prefers-reduced-motion: no-preference) {
-      .reveal {
-        opacity: 0;
-        transform: translateY(18px);
-        transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
-      }
-      .reveal.active {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    /* Focus states */
-    a:focus, button:focus, .pillar-item:focus {
-      outline: 2px solid var(--accent);
-      outline-offset: 4px;
-    }
-    
-    /* Skip link for accessibility */
-    .skip-link {
-      position: absolute;
-      top: -40px; left: 0;
-      background: var(--accent);
-      color: #000;
-      padding: 0.5rem 1rem;
-      z-index: 10001;
-      transition: top 0.2s;
-    }
-    .skip-link:focus { top: 0; }
   </style>
 </head>
 <body>
-  <!-- Accessibility -->
-  <a href="#main" class="skip-link mono">Skip to content</a>
-  
-  <!-- Progress Bar -->
-  <div class="progress-bar" id="progress"></div>
-  
-  <!-- Floating Particles -->
-  <div class="particles" aria-hidden="true">
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-    <div class="particle"></div>
-  </div>
-  
-  <!-- Scroll Indicator -->
-  <div class="scroll-indicator" id="scrollIndicator" aria-label="Scroll down"></div>
-
   <!-- Loader -->
-  <div id="loader" role="status" aria-live="polite">
-    <div class="loader-box">
-      <div class="loader-status" id="loader-status">INITIALIZING</div>
+  <div id="loader">
+    <div class="loader-content">
+      <div class="loader-text">INITIALIZING EMPIRE SYSTEMS</div>
       <div class="loader-bar">
-        <div class="loader-fill" id="loader-fill"></div>
+        <div class="loader-fill" id="loaderFill"></div>
       </div>
-      <div class="loader-text mono" id="loader-perc">000</div>
     </div>
   </div>
 
-  <!-- Navigation -->
+  <!-- Progress -->
+  <div class="progress" id="progress"></div>
+
+  <!-- Nav -->
   <nav>
-    <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">EMPIRE.BORN</div>
-    <a href="#" class="instagram-link mono" onclick="openInstagram(event)" aria-label="Follow on Instagram">
-      <svg class="instagram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-      </svg>
-      @empire.born
-    </a>
+    <div class="logo">EMPIRE.BORN</div>
+    <a href="#" class="nav-link" onclick="openInstagram(event)">@empire.born</a>
   </nav>
 
   <!-- 3D Scene -->
-  <div class="scene" aria-hidden="true">
+  <div class="scene">
     <div class="core">
-      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
-      <div class="plane">
-        <div class="dollar-tex">
-          <div class="corner corner-tl"></div>
-          <div class="corner corner-tr"></div>
-          <div class="corner corner-bl"></div>
-          <div class="corner corner-br"></div>
-        </div>
-        <div class="gold-tex"></div>
-      </div>
-      <div class="plane">
-        <div class="dollar-tex">
-          <div class="corner corner-tl"></div>
-          <div class="corner corner-tr"></div>
-          <div class="corner corner-bl"></div>
-          <div class="corner corner-br"></div>
-        </div>
-        <div class="gold-tex"></div>
-      </div>
+      <div class="plane edge-tex"><div class="gold-edge"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge"></div></div>
+      <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
+      <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
     </div>
   </div>
 
-  <!-- Main Content -->
-  <div class="content-wrapper" id="main">
+  <!-- Content -->
+  <div class="content">
     <!-- Hero -->
-    <section class="hero-content reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">Initiate System</div>
-      <h1 class="display">Elite<br>Paradigm.</h1>
-      <p class="sub">Where currency transforms into legacy. Pure spatial architecture for those who demand the highest standard of wealth creation.</p>
-    </section>
-
-    <!-- Framework -->
-    <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">The Framework</div>
-      <div class="pillars">
-        <article class="pillar-item">
-          <div class="mono">01 // Logic</div>
-          <h3 class="p-title">Cold Calculation</h3>
-          <p class="p-body">Emotion is a liability. Architecture demands pure, cold precision. We teach the algorithms of absolute control.</p>
-        </article>
-        <article class="pillar-item">
-          <div class="mono">02 // Force</div>
-          <h3 class="p-title">Kinetic Discipline</h3>
-          <p class="p-body">Momentum generated through relentless, unyielding action. A framework forged in pressure and perfected in silence.</p>
-        </article>
-        <article class="pillar-item">
-          <div class="mono">03 // Time</div>
-          <h3 class="p-title">Infinite Horizon</h3>
-          <p class="p-body">We do not build for tomorrow. We construct titanium structures designed to outlast biological limitations.</p>
-        </article>
+    <section class="hero reveal">
+      <div class="hero-label">System v2.0.26</div>
+      <h1 class="display">Wealth<br>Architecture.</h1>
+      <p class="hero-sub">Not just money. Systems. Structures. Empires. Built for those who refuse to play by someone else's rules.</p>
+      <div class="cta-group">
+        <a href="#" class="btn btn-primary" onclick="openInstagram(event)">Join The Empire</a>
+        <a href="#framework" class="btn">Explore Framework</a>
       </div>
     </section>
 
-    <!-- Manifesto 1 -->
+    <!-- Framework Showcase (Secret Level style) -->
+    <section id="framework" class="reveal">
+      <div class="section-label">The Framework</div>
+      <div class="showcase-grid">
+        <div class="showcase-item">
+          <div class="showcase-num">01</div>
+          <h3 class="showcase-title">Cold Logic</h3>
+          <p class="showcase-desc">Emotion is volatility. Volatility is risk. We eliminate risk through pure algorithmic thinking.</p>
+        </div>
+        <div class="showcase-item">
+          <div class="showcase-num">02</div>
+          <h3 class="showcase-title">Kinetic Force</h3>
+          <p class="showcase-desc">Momentum isn't created—it's captured. We teach you to harvest energy from chaos.</p>
+        </div>
+        <div class="showcase-item">
+          <div class="showcase-num">03</div>
+          <h3 class="showcase-title">Infinite Time</h3>
+          <p class="showcase-desc">Build for centuries, not quarters. Your empire should outlive your biology.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs (Oryzo style) -->
+    <section class="reveal">
+      <div class="section-label">Technical Specifications</div>
+      <div class="specs">
+        <div class="spec-item">
+          <div class="spec-label">Precision</div>
+          <div class="spec-value">99.97%</div>
+          <div class="spec-desc">Accuracy in execution. The 0.03% is for black swans.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Uptime</div>
+          <div class="spec-value">24/7/365</div>
+          <div class="spec-desc">Markets never sleep. Neither do we. No cloud required.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">ROI Horizon</div>
+          <div class="spec-value">∞</div>
+          <div class="spec-desc">Infinite. We're building dynasties, not day trades.</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Emotional Drag</div>
+          <div class="spec-value">0.0</div>
+          <div class="spec-desc">Zero. Pure logic. Pure execution. Pure results.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Manifesto -->
     <section class="manifesto reveal">
-      <h2 class="display">"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away."</h2>
-      <div class="mono">Join the absolute standard.</div>
+      <div class="section-label" style="text-align: center; border: none;">The Philosophy</div>
+      <h2>"Perfection isn't addition. It's subtraction."</h2>
+      <p class="manifesto-quote">Remove the noise. Remove the emotion. Remove the doubt. What remains is the system. And the system prints.</p>
     </section>
 
-    <!-- The Mint -->
+    <!-- Tiers (Oryzo style) -->
     <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">04 // The Mint</div>
-      <div class="hero-content">
-        <h2 class="display" style="font-size: clamp(2rem, 7vw, 4rem);">Forged in<br>Silence.</h2>
-        <p class="sub">The transition from currency to asset is where true wealth begins. We don't just hold value; we create the structures that enforce it.</p>
-      </div>
-    </section>
-
-    <!-- Vision -->
-    <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">05 // Vision</div>
-      <div class="hero-content">
-        <h2 class="display" style="font-size: clamp(2rem, 7vw, 4.5rem);">Beyond<br>Wealth.</h2>
-        <p class="sub">True empire is not measured in numbers, but in influence, legacy, and the systems that outlive their creators. We build dynasties, not portfolios.</p>
-      </div>
-    </section>
-
-    <!-- Reserve -->
-    <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">06 // Reserve</div>
-      <div class="pillars">
-        <article class="pillar-item">
-          <div class="mono">Asset</div>
-          <h3 class="p-title">Hardened Logic</h3>
-          <p class="p-body">The gold standard isn't just a metal. It's a mindset of immutable, unchanging discipline in a world of inflation.</p>
-        </article>
-        <article class="pillar-item">
-          <div class="mono">Standard</div>
-          <h3 class="p-title">Sovereign Wealth</h3>
-          <p class="p-body">Physical assets in a digital world. Tangible power that cannot be deleted, frozen, or devalued by distant bureaucrats.</p>
-        </article>
-      </div>
-    </section>
-
-    <!-- Legacy -->
-    <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">07 // Legacy</div>
-      <div class="hero-content">
-        <h2 class="display" style="font-size: clamp(2rem, 7vw, 4.5rem);">Built to<br>Outlast.</h2>
-        <p class="sub">Every empire leaves a mark. We engineer wealth structures that transcend generations, creating foundations for those who will carry the torch forward.</p>
-      </div>
-    </section>
-
-    <!-- Protocol -->
-    <section style="text-align: right; align-items: flex-end;" class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">08 // Protocol</div>
-      <h2 class="display" style="font-size: clamp(2rem, 7vw, 4rem);">The Gold<br>Standard.</h2>
-      <p class="sub">Finalizing the transformation. From the paper promise to the physical reality of sovereign wealth.</p>
-    </section>
-
-    <!-- Membership -->
-    <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem; text-align: center;">Membership</div>
-      <div class="pillars" style="max-width: 900px; margin: 3vh auto 0;">
-        <article class="pillar-item" style="text-align: center;">
-          <div class="mono" style="font-size: 0.6rem;">Tier 01</div>
-          <h3 class="p-title">Initiate</h3>
-          <p class="p-body">Access to foundational systems and wealth architecture principles.</p>
-        </article>
-        <article class="pillar-item" style="text-align: center; border-color: var(--accent);">
-          <div class="mono" style="font-size: 0.6rem; color: var(--accent);">Tier 02</div>
-          <h3 class="p-title">Architect</h3>
-          <p class="p-body">Advanced frameworks, direct mentorship, and asset conversion strategies.</p>
-        </article>
-        <article class="pillar-item" style="text-align: center;">
-          <div class="mono" style="font-size: 0.6rem;">Tier 03</div>
-          <h3 class="p-title">Sovereign</h3>
-          <p class="p-body">Complete empire blueprint, legacy planning, and generational wealth structures.</p>
-        </article>
+      <div class="section-label">Access Levels</div>
+      <div class="tiers">
+        <div class="tier">
+          <div class="tier-badge">LEVEL 01</div>
+          <h3 class="tier-name">Initiate</h3>
+          <p class="tier-desc">Foundation protocols. Learn the architecture before you build it.</p>
+          <ul class="tier-specs">
+            <li><span>Core Systems</span> <span>✓</span></li>
+            <li><span>Logic Framework</span> <span>✓</span></li>
+            <li><span>Community Access</span> <span>✓</span></li>
+            <li><span>Mentorship</span> <span>—</span></li>
+            <li><span>Asset Protocols</span> <span>—</span></li>
+          </ul>
+        </div>
+        <div class="tier">
+          <div class="tier-badge featured">LEVEL 02</div>
+          <h3 class="tier-name">Architect</h3>
+          <p class="tier-desc">Advanced deployment. Direct access. Real-time optimization.</p>
+          <ul class="tier-specs">
+            <li><span>Core Systems</span> <span>✓</span></li>
+            <li><span>Logic Framework</span> <span>✓</span></li>
+            <li><span>Community Access</span> <span>✓</span></li>
+            <li><span>Mentorship</span> <span>✓</span></li>
+            <li><span>Asset Protocols</span> <span>✓</span></li>
+          </ul>
+        </div>
+        <div class="tier">
+          <div class="tier-badge">LEVEL 03</div>
+          <h3 class="tier-name">Sovereign</h3>
+          <p class="tier-desc">Complete blueprint. Generational systems. Legacy architecture.</p>
+          <ul class="tier-specs">
+            <li><span>Everything</span> <span>✓</span></li>
+            <li><span>Legacy Planning</span> <span>✓</span></li>
+            <li><span>Direct Line</span> <span>✓</span></li>
+            <li><span>Custom Systems</span> <span>✓</span></li>
+            <li><span>Lifetime Access</span> <span>✓</span></li>
+          </ul>
+        </div>
       </div>
     </section>
 
     <!-- Final CTA -->
-    <section class="manifesto reveal">
-      <div class="mono">System Completion</div>
-      <h2 class="display">"True power is the ability to maintain the standard regardless of the environment."</h2>
-      <a href="#" class="cta-btn" onclick="openInstagram(event); return false;" id="enterBtn">Enter The Empire</a>
-      <div style="margin-top: 1.5rem;">
-        <a href="#" class="instagram-link mono" onclick="openInstagram(event)" style="font-size: 0.65rem;">
-          <svg class="instagram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-          </svg>
-          Follow @empire.born on Instagram
-        </a>
+    <section class="footer-cta reveal">
+      <h2 class="display">Ready to<br>Build?</h2>
+      <p>The empire doesn't build itself. But we'll give you the blueprint.</p>
+      <div class="cta-group" style="justify-content: center;">
+        <a href="#" class="btn btn-primary" onclick="openInstagram(event)">Enter @empire.born</a>
+      </div>
+      <div style="margin-top: 4rem;">
+        <div class="mono">System Status: <span style="color: var(--accent);">Online</span></div>
       </div>
     </section>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // ===== INSTAGRAM DEEP LINKING =====
-    function openInstagram(event) {
-      if (event) event.preventDefault();
-      
-      const username = 'empire.born';
-      const instagramUrl = `https://instagram.com/${username}`;
-      const instagramAppUrl = `instagram://user?username=${username}`;
-      
-      // Try to open app first, fallback to web
+    // Instagram Deep Link
+    function openInstagram(e) {
+      e.preventDefault();
+      const url = 'https://instagram.com/empire.born';
+      const appUrl = 'instagram://user?username=empire.born';
       const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
       
       if (isMobile) {
-        // Create hidden iframe to try app URL
         const iframe = document.createElement('iframe');
         iframe.style.display = 'none';
-        iframe.src = instagramAppUrl;
+        iframe.src = appUrl;
         document.body.appendChild(iframe);
-        
-        // Fallback to web after 2 seconds if app didn't open
         setTimeout(() => {
-          window.location.href = instagramUrl;
+          window.location.href = url;
           document.body.removeChild(iframe);
         }, 2000);
       } else {
-        // Desktop: open web directly
-        window.open(instagramUrl, '_blank');
+        window.open(url, '_blank');
       }
     }
 
-    // ===== UTILITIES =====
-    const lerp = (start, end, factor) => start + (end - start) * factor;
-    const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+    // Loader
+    let progress = 0;
+    const loaderFill = document.getElementById('loaderFill');
+    const loader = document.getElementById('loader');
     
-    // ===== LOADER =====
-    document.addEventListener('DOMContentLoaded', () => {
-      const loaderPerc = document.getElementById('loader-perc');
-      const loaderFill = document.getElementById('loader-fill');
-      const loaderStatus = document.getElementById('loader-status');
-      const loader = document.getElementById('loader');
-      
-      const statuses = ["SECURING ASSETS", "UPLOADING CAPITAL", "RENDERING WEALTH", "SYSTEM ONLINE"];
-      let perc = 0;
-      
-      const bootInterval = setInterval(() => {
-        perc = Math.min(perc + Math.random() * 5 + 2, 100);
-        const displayPerc = Math.floor(perc);
-        
-        loaderPerc.textContent = displayPerc.toString().padStart(3, '0');
-        loaderFill.style.width = `${displayPerc}%`;
-        
-        if (perc < 30) loaderStatus.textContent = statuses[0];
-        else if (perc < 65) loaderStatus.textContent = statuses[1];
-        else if (perc < 95) loaderStatus.textContent = statuses[2];
-        else loaderStatus.textContent = statuses[3];
-        
-        if (perc >= 100) {
-          clearInterval(bootInterval);
-          setTimeout(() => {
-            loader.classList.add('hide');
-            setTimeout(initRevealObservers, 300);
-          }, 400);
-        }
-      }, 40);
-    });
-
-    // ===== SMOOTH SCROLL & PROGRESS =====
-    let lastScrollY = 0;
-    let ticking = false;
-    
-    function updateScroll() {
-      const scrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = clamp(scrollY / maxScroll, 0, 1);
-      
-      document.body.style.setProperty('--scroll', scrollY);
-      document.body.style.setProperty('--morph', progress);
-      document.body.style.setProperty('--pulse', Math.sin(progress * Math.PI));
-      
-      const progressEl = document.getElementById('progress');
-      progressEl.style.transform = `scaleX(${progress})`;
-      
-      const indicator = document.getElementById('scrollIndicator');
-      if (scrollY < 200 && progress < 0.95) {
-        indicator.classList.add('visible');
-      } else {
-        indicator.classList.remove('visible');
+    const interval = setInterval(() => {
+      progress += Math.random() * 15 + 5;
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(interval);
+        setTimeout(() => loader.classList.add('hide'), 500);
       }
+      loaderFill.style.width = progress + '%';
+    }, 100);
+
+    // Scroll Progress & Morph
+    let ticking = false;
+    function updateScroll() {
+      const scroll = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scroll / maxScroll;
       
-      lastScrollY = scrollY;
+      document.getElementById('progress').style.transform = `scaleX(${progress})`;
+      document.body.style.setProperty('--scroll', scroll);
+      document.body.style.setProperty('--morph', Math.min(progress * 1.5, 1));
+      
       ticking = false;
     }
     
@@ -1097,71 +856,26 @@
       }
     }, { passive: true });
 
-    // ===== 3D MOUSE TRACKING (Debounced) =====
+    // Mouse Tracking
     let mouseX = 0.5, mouseY = 0.5;
-    let targetX = 0.5, targetY = 0.5;
-    let rotation = 0;
-    let targetRotation = 0;
-    
-    function updateMouse() {
-      mouseX = lerp(mouseX, targetX, 0.08);
-      mouseY = lerp(mouseY, targetY, 0.08);
-      rotation = lerp(rotation, targetRotation, 0.05);
-      
-      document.body.style.setProperty('--mx', mouseX.toFixed(3));
-      document.body.style.setProperty('--my', mouseY.toFixed(3));
-      document.body.style.setProperty('--rotation', rotation.toFixed(2) + 'deg');
-      
-      requestAnimationFrame(updateMouse);
-    }
-    
-    requestAnimationFrame(updateMouse);
-    
-    function handlePointerMove(e) {
-      const x = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth / 2;
-      const y = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
-      
-      targetX = clamp(x / window.innerWidth, 0, 1);
-      targetY = clamp(y / window.innerHeight, 0, 1);
-      
-      // Add subtle auto-rotation based on mouse X position
-      targetRotation = (targetX - 0.5) * 20;
-    }
-    
-    window.addEventListener('mousemove', handlePointerMove, { passive: true });
-    window.addEventListener('touchmove', handlePointerMove, { passive: true });
-
-    // ===== REVEAL ON SCROLL =====
-    function initRevealObservers() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-      
-      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    }
-
-    // ===== SCROLL INDICATOR CLICK =====
-    document.getElementById('scrollIndicator')?.addEventListener('click', () => {
-      window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' });
-    });
-
-    // ===== RESIZE HANDLER (Debounced) =====
-    let resizeTimeout;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(() => {
-        updateScroll();
-      }, 100);
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX / window.innerWidth;
+      mouseY = e.clientY / window.innerHeight;
+      document.body.style.setProperty('--mx', mouseX);
+      document.body.style.setProperty('--my', mouseY);
     }, { passive: true });
 
-    // ===== INITIALIZE =====
+    // Reveal on Scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    
     updateScroll();
   </script>
 </body>
