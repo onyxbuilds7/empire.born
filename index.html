@@ -4,25 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#030303">
-  <meta name="description" content="empire.born — The Architecture of Wealth. Build systems of discipline for those who demand the highest standard.">
+  <meta name="description" content="empire.born — The Architecture of Wealth.">
   
-  <!-- Performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" as="style">
   
-  <!-- Social -->
   <meta property="og:title" content="empire.born — The Architecture of Wealth">
-  <meta property="og:description" content="Where currency transforms into legacy. Join the elite standard.">
+  <meta property="og:description" content="Where currency transforms into legacy.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://empire.born">
-  <meta property="og:image" content="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1200">
   <meta name="twitter:card" content="summary_large_image">
-  
-  <!-- PWA -->
-  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiZW1waXJlLmJvcm4iLCJzaG9ydF9uYW1lIjoiZW1waXJlIiwiZGVzY3JpcHRpb24iOiJUaGUgQXJjaGl0ZWN0dXJlIG9mIFdlYWx0aCIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDMwMzAzIiwidGhlbWVfY29sb3IiOiIjMDMwMzAzIn0=">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <title>empire.born — The Architecture of Wealth</title>
   
@@ -30,24 +21,12 @@
   
   <style>
     :root {
-      --bg: #030303;
-      --bg-elev: #080808;
-      --text: #f5f5f5;
-      --text-dim: #a0a0a0;
-      --text-muted: #555555;
-      --accent: #00ff66;
-      --accent-dim: #00cc52;
-      --gold: #d4af37;
-      --border: rgba(255, 255, 255, 0.06);
-      --border-hover: rgba(255, 255, 255, 0.18);
-      
-      --mx: 0.5; --my: 0.5; --scroll: 0; --morph: 0; --hover-intensity: 0;
-      
-      --font-display: 'Syne', sans-serif;
-      --font-body: 'Inter', sans-serif;
+      --bg: #030303; --bg-elev: #080808; --text: #f5f5f5; --text-dim: #a0a0a0;
+      --text-muted: #555; --accent: #00ff66; --gold: #d4af37;
+      --border: rgba(255,255,255,0.06); --border-hover: rgba(255,255,255,0.18);
+      --font-display: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
       --font-mono: 'Space Mono', monospace;
-      
-      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
     }
 
@@ -60,69 +39,45 @@
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
     
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      line-height: 1.6;
-      overflow-x: hidden;
-      min-height: 100vh;
-      cursor: default;
+      background: var(--bg); color: var(--text);
+      font-family: var(--font-body); line-height: 1.6;
+      overflow-x: hidden; min-height: 100vh;
     }
 
-    /* Skip Link */
     .skip-link {
       position: absolute; top: -40px; left: 0;
       background: var(--accent); color: #000;
       padding: 0.6rem 1.2rem; z-index: 10001;
       text-decoration: none; font-family: var(--font-mono);
-      font-size: 0.75rem; font-weight: 700;
-      transition: top 0.2s;
+      font-size: 0.75rem; font-weight: 700; transition: top 0.2s;
     }
-    .skip-link:focus { top: 0; outline: 2px solid #fff; outline-offset: 2px; }
-
-    /* Focus Visible */
+    .skip-link:focus { top: 0; outline: 2px solid #fff; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-    /* Background Atmosphere */
+    /* Background */
     .bg-atmosphere {
       position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: 
-        radial-gradient(
-          circle at calc(var(--mx) * 100%) calc(var(--my) * 100%),
-          rgba(0, 255, 102, 0.08) 0%,
-          transparent 40%
-        ),
-        radial-gradient(
-          circle at 80% 20%,
-          rgba(212, 175, 55, 0.06) 0%,
-          transparent 35%
-        ),
-        var(--bg);
+      background: radial-gradient(circle at 50% 50%, rgba(0,255,102,0.06) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 20%, rgba(212,175,55,0.05) 0%, transparent 35%),
+                  var(--bg);
+      transition: background 0.5s;
     }
-    
-    .bg-grid {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background-image: 
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
-      mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
-      -webkit-mask-image: radial-gradient(circle at center, black 20%, transparent 70%);
-      opacity: 0.6;
-    }
-    
     .bg-vignette {
       position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.8) 100%);
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.9) 100%);
     }
-    
     .bg-noise {
-      position: fixed; inset: 0; z-index: 9999; pointer-events: none;
-      opacity: 0.025;
+      position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025;
       background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* Typography Scale */
+    /* Particle Canvas */
+    #particleCanvas {
+      position: fixed; inset: 0; z-index: 1; pointer-events: auto;
+      cursor: crosshair;
+    }
+
+    /* Typography */
     .display { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; line-height: 0.88; }
     .heading-xl { font-size: clamp(3.5rem, 11vw, 9rem); }
     .heading-lg { font-size: clamp(2.5rem, 7vw, 5.5rem); }
@@ -135,12 +90,12 @@
     #loader {
       position: fixed; inset: 0; background: #000; z-index: 10000;
       display: flex; align-items: center; justify-content: center;
-      transition: transform 1s var(--ease-out-expo);
+      transition: transform 1s var(--ease-out);
     }
     #loader.hide { transform: translateY(-100%); }
     .loader-content { text-align: center; }
     .loader-text { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.35em; margin-bottom: 2rem; animation: pulse 2s infinite; }
-    .loader-bar { width: 220px; height: 1px; background: var(--border); position: relative; overflow: hidden; border-radius: 1px; }
+    .loader-bar { width: 220px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
     .loader-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; box-shadow: 0 0 15px var(--accent); }
     @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
 
@@ -159,83 +114,42 @@
     /* Progress */
     .progress { position: fixed; top: 0; left: 0; height: 1px; background: var(--accent); z-index: 1000; transform-origin: left; transition: transform 0.1s; }
 
-    /* 3D Scene Enhanced */
-    .scene {
-      position: fixed; inset: 0; perspective: 1400px;
-      perspective-origin: calc(var(--mx) * 100%) calc(var(--my) * 100%);
-      display: flex; align-items: center; justify-content: center;
-      pointer-events: none; z-index: 0;
+    /* Morph indicator */
+    .morph-indicator {
+      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+      z-index: 50; display: flex; align-items: center; gap: 1rem;
+      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
+      color: var(--text-muted); opacity: 0.6; transition: opacity 0.3s;
+      pointer-events: none;
     }
-    
-    .core {
-      position: relative; width: 380px; height: 80px;
-      transform-style: preserve-3d;
-      transform: rotateX(calc((var(--my) - 0.5) * -35deg)) rotateY(calc((var(--mx) - 0.5) * 45deg));
-      transition: transform 0.15s linear, box-shadow 0.3s;
-      cursor: grab; pointer-events: auto;
-      animation: float 8s infinite ease-in-out;
-      will-change: transform;
+    .morph-indicator.hidden { opacity: 0; }
+    .morph-bar {
+      width: 120px; height: 2px; background: var(--border); border-radius: 1px;
+      position: relative; overflow: hidden;
     }
-    
-    .core:hover { animation-play-state: paused; }
-    .core:active { cursor: grabbing; }
-    
-    @keyframes float {
-      0%, 100% { transform: rotateX(calc((var(--my) - 0.5) * -35deg)) rotateY(calc((var(--mx) - 0.5) * 45deg)) translateY(0); }
-      50% { transform: rotateX(calc((var(--my) - 0.5) * -35deg)) rotateY(calc((var(--mx) - 0.5) * 45deg)) translateY(-12px); }
+    .morph-bar-fill {
+      position: absolute; left: 0; top: 0; height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--gold));
+      width: 0%; transition: width 0.3s;
     }
-    
-    .plane { position: absolute; backface-visibility: hidden; transition: filter 0.3s; }
-    
-    .dollar-tex {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #0a1a12 0%, #153a24 50%, #0a1a12 100%);
-      opacity: calc(1 - var(--morph)); transition: opacity 0.6s var(--ease-smooth);
-      border: 1px solid rgba(191, 149, 63, 0.3);
-    }
-    .dollar-tex::after {
-      content: '$100'; position: absolute; top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
-      background: linear-gradient(135deg, #d4af37, #f4e4b5, #aa8c2c);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      letter-spacing: 0.1em; opacity: 0.9;
-    }
-    
-    .gold-tex {
-      position: absolute; inset: 0;
-      background: linear-gradient(135deg, #bf953f, #fcf6ba, #aa771c, #fcf6ba, #bf953f);
-      background-size: 300% 300%;
-      animation: shimmer 10s infinite linear;
-      opacity: var(--morph); transition: opacity 0.6s var(--ease-smooth);
-      box-shadow: inset 0 0 40px rgba(0,0,0,0.5), 0 0 60px rgba(212, 175, 55, 0.2);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-    @keyframes shimmer { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
-    
-    .edge-tex { background: repeating-linear-gradient(to bottom, #c8d8cc 0px, #8a9e8d 1.5px); }
-    .gold-edge { position: absolute; inset: 0; background: linear-gradient(135deg, #aa771c, #d4af37); opacity: var(--morph); transition: opacity 0.6s; }
-    
-    .plane:nth-child(1) { width: 100%; height: 100%; transform: translateZ(80px); }
-    .plane:nth-child(2) { width: 100%; height: 100%; transform: rotateY(180deg) translateZ(80px); }
-    .plane:nth-child(3) { width: 160px; height: 100%; left: 50%; margin-left: -80px; transform: rotateY(90deg) translateZ(190px); }
-    .plane:nth-child(4) { width: 160px; height: 100%; left: 50%; margin-left: -80px; transform: rotateY(-90deg) translateZ(190px); }
-    .plane:nth-child(5) { width: 100%; height: 160px; top: 50%; margin-top: -80px; transform: rotateX(90deg) translateZ(80px); }
-    .plane:nth-child(6) { width: 100%; height: 160px; top: 50%; margin-top: -80px; transform: rotateX(-90deg) translateZ(80px); }
 
-    /* Content Layout */
-    .content { position: relative; z-index: 10; }
-    section { min-height: 100vh; padding: clamp(5rem, 12vh, 10rem) clamp(1.5rem, 6vw, 5rem); display: flex; flex-direction: column; justify-content: center; position: relative; }
+    /* Content */
+    .content { position: relative; z-index: 10; pointer-events: none; }
+    .content > * { pointer-events: auto; }
+    section {
+      min-height: 100vh; padding: clamp(5rem, 12vh, 10rem) clamp(1.5rem, 6vw, 5rem);
+      display: flex; flex-direction: column; justify-content: center;
+    }
     
     .section-label {
-      font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
-      color: var(--text-muted); margin-bottom: 2.5rem; padding-bottom: 0.8rem;
-      border-bottom: 1px solid var(--border); display: inline-block;
+      font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em;
+      text-transform: uppercase; color: var(--text-muted); margin-bottom: 2.5rem;
+      padding-bottom: 0.8rem; border-bottom: 1px solid var(--border); display: inline-block;
       position: relative;
     }
     .section-label::after {
       content: ''; position: absolute; bottom: -1px; left: 0; height: 1px; width: 0;
-      background: var(--accent); transition: width 0.6s var(--ease-out-expo);
+      background: var(--accent); transition: width 0.6s var(--ease-out);
     }
     section:hover .section-label::after { width: 60px; }
 
@@ -252,13 +166,13 @@
       padding: 1.1rem 2.4rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em;
       text-transform: uppercase; text-decoration: none; border: 1px solid var(--border);
       background: transparent; color: var(--text); cursor: pointer;
-      transition: all 0.35s var(--ease-out-expo); position: relative; overflow: hidden;
+      transition: all 0.35s var(--ease-out); position: relative; overflow: hidden;
       display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
       border-radius: 2px;
     }
     .btn::before {
       content: ''; position: absolute; inset: 0; background: var(--text);
-      transform: scaleX(0); transform-origin: right; transition: transform 0.4s var(--ease-out-expo); z-index: -1;
+      transform: scaleX(0); transform-origin: right; transition: transform 0.4s var(--ease-out); z-index: -1;
     }
     .btn:hover::before { transform: scaleX(1); transform-origin: left; }
     .btn:hover { color: var(--bg); border-color: var(--text); transform: translateY(-2px); }
@@ -267,11 +181,11 @@
     .btn-primary:hover { color: var(--bg); }
     .btn:active { transform: translateY(0) scale(0.98); }
 
-    /* Grid Showcase */
+    /* Grid */
     .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1px; background: var(--border); margin-top: 3rem; border-radius: 4px; overflow: hidden; }
     .showcase-item {
-      background: var(--bg-elev); padding: 3.5rem 2.5rem; transition: all 0.4s var(--ease-out-expo);
-      cursor: pointer; position: relative; overflow: hidden; border-radius: 0;
+      background: var(--bg-elev); padding: 3.5rem 2.5rem; transition: all 0.4s var(--ease-out);
+      cursor: pointer; position: relative; overflow: hidden;
     }
     .showcase-item::before {
       content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -288,7 +202,7 @@
     .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; margin-top: 4rem; }
     .spec-item {
       padding: 2.5rem; border: 1px solid var(--border); border-radius: 4px;
-      transition: all 0.35s var(--ease-out-expo); background: rgba(255,255,255,0.01);
+      transition: all 0.35s var(--ease-out); background: rgba(255,255,255,0.01);
     }
     .spec-item:hover { border-color: var(--border-hover); transform: translateY(-3px); background: rgba(255,255,255,0.02); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
     .spec-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; }
@@ -297,7 +211,7 @@
 
     /* Tiers */
     .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1px; background: var(--border); margin-top: 3rem; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .tier { background: var(--bg-elev); padding: 3.5rem 2.5rem; position: relative; transition: all 0.4s var(--ease-out-expo); }
+    .tier { background: var(--bg-elev); padding: 3.5rem 2.5rem; position: relative; transition: all 0.4s var(--ease-out); }
     .tier:hover { background: var(--bg); transform: translateY(-4px); }
     .tier-badge { position: absolute; top: 1.8rem; right: 1.8rem; font-family: var(--font-mono); font-size: 0.55rem; padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 2px; }
     .tier-badge.featured { border-color: var(--accent); color: var(--accent); background: rgba(0,255,102,0.05); }
@@ -317,8 +231,8 @@
     .footer-cta h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 800; margin-bottom: 2rem; line-height: 0.95; }
     .footer-cta p { color: var(--text-dim); margin-bottom: 3.5rem; max-width: 520px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
 
-    /* Reveal Animation */
-    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out-expo), transform 0.8s var(--ease-out-expo); }
+    /* Reveal */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
     .reveal.active { opacity: 1; transform: translateY(0); }
     .reveal.delay-1 { transition-delay: 0.1s; }
     .reveal.delay-2 { transition-delay: 0.2s; }
@@ -330,22 +244,15 @@
       .showcase-grid, .tiers { grid-template-columns: 1fr; }
       .cta-group { flex-direction: column; }
       .btn { width: 100%; text-align: center; }
-      .core { width: 280px; height: 60px; }
-      .plane:nth-child(1), .plane:nth-child(2) { transform: translateZ(60px); }
-      .plane:nth-child(2) { transform: rotateY(180deg) translateZ(60px); }
-      .plane:nth-child(3), .plane:nth-child(4) { width: 120px; margin-left: -60px; transform: rotateY(90deg) translateZ(140px); }
-      .plane:nth-child(4) { transform: rotateY(-90deg) translateZ(140px); }
-      .plane:nth-child(5), .plane:nth-child(6) { height: 120px; margin-top: -60px; transform: rotateX(90deg) translateZ(60px); }
-      .plane:nth-child(6) { transform: rotateX(-90deg) translateZ(60px); }
     }
 
     @media (prefers-contrast: high) {
-      :root { --border: rgba(255, 255, 255, 0.25); --text-dim: #cccccc; }
+      :root { --border: rgba(255,255,255,0.25); --text-dim: #ccc; }
       .btn { border-width: 2px; }
     }
     
     @media print {
-      .scene, nav, .progress, #loader, .bg-atmosphere, .bg-grid, .bg-vignette, .bg-noise { display: none; }
+      #particleCanvas, nav, .progress, #loader, .bg-atmosphere, .bg-vignette, .bg-noise { display: none; }
       body { background: #fff; color: #000; }
     }
   </style>
@@ -353,13 +260,19 @@
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
 
-  <!-- Background Layers -->
   <div class="bg-atmosphere" aria-hidden="true"></div>
-  <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-vignette" aria-hidden="true"></div>
   <div class="bg-noise" aria-hidden="true"></div>
 
-  <!-- Loader -->
+  <canvas id="particleCanvas" aria-hidden="true"></canvas>
+
+  <!-- Morph Indicator -->
+  <div class="morph-indicator" id="morphIndicator">
+    <span>GLOBE</span>
+    <div class="morph-bar"><div class="morph-bar-fill" id="morphBarFill"></div></div>
+    <span>BILLS</span>
+  </div>
+
   <div id="loader" role="status" aria-live="polite" aria-busy="true">
     <div class="loader-content">
       <div class="loader-text">INITIALIZING EMPIRE SYSTEMS</div>
@@ -367,28 +280,13 @@
     </div>
   </div>
 
-  <!-- Progress -->
   <div class="progress" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
-  <!-- Nav -->
   <nav role="navigation" aria-label="Main">
     <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" tabindex="0" role="button" aria-label="Scroll to top">EMPIRE.BORN</div>
     <a href="https://instagram.com/empire.born" class="nav-link" onclick="openInstagram(event)" aria-label="Follow on Instagram" target="_blank" rel="noopener noreferrer">@empire.born</a>
   </nav>
 
-  <!-- 3D Scene -->
-  <div class="scene" role="img" aria-label="Interactive 3D wealth visualization. Drag to rotate.">
-    <div class="core" id="core3D" tabindex="0" role="button" aria-label="3D object. Drag or use arrow keys to rotate." aria-grabbed="false">
-      <div class="plane edge-tex"><div class="gold-edge"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge"></div></div>
-      <div class="plane edge-tex"><div class="gold-edge"></div></div>
-      <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
-      <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
-    </div>
-  </div>
-
-  <!-- Content -->
   <div class="content" id="main">
     <section class="hero reveal" aria-labelledby="hero-heading">
       <div class="hero-label">System v2.0.26</div>
@@ -523,97 +421,27 @@
     }
 
     // ===== LOADER =====
-    let progress = 0;
+    let loadProgress = 0;
     const loaderFill = document.getElementById('loaderFill');
     const loader = document.getElementById('loader');
     const loadInterval = setInterval(() => {
-      progress += Math.random() * 12 + 4;
-      if (progress >= 100) {
-        progress = 100; clearInterval(loadInterval);
+      loadProgress += Math.random() * 12 + 4;
+      if (loadProgress >= 100) {
+        loadProgress = 100; clearInterval(loadInterval);
         setTimeout(() => { loader.classList.add('hide'); loader.setAttribute('aria-busy', 'false'); }, 400);
       }
-      loaderFill.style.width = progress + '%';
+      loaderFill.style.width = loadProgress + '%';
     }, 80);
 
-    // ===== INTERACTIVE 3D WITH INERTIA =====
-    const core = document.getElementById('core3D');
-    let isDragging = false;
-    let startX, startY;
-    let currentRotX = 0.5, currentRotY = 0.5;
-    let targetRotX = 0.5, targetRotY = 0.5;
-    let autoRotate = true, autoAngle = 0;
-    let animationId;
-
-    function clamp(v, min, max) { return Math.min(Math.max(v, min), max); }
-    function lerp(start, end, factor) { return start + (end - start) * factor; }
-
-    function update3D() {
-      if (!isDragging) {
-        currentRotX = lerp(currentRotX, targetRotX, 0.08);
-        currentRotY = lerp(currentRotY, targetRotY, 0.08);
-      }
-      document.body.style.setProperty('--mx', currentRotY.toFixed(3));
-      document.body.style.setProperty('--my', currentRotX.toFixed(3));
-      animationId = requestAnimationFrame(update3D);
-    }
-    update3D();
-
-    function handleStart(x, y) {
-      isDragging = true; autoRotate = false;
-      startX = x; startY = y;
-      core.setAttribute('aria-grabbed', 'true');
-      core.style.animationPlayState = 'paused';
-    }
-    function handleEnd() {
-      isDragging = false;
-      core.setAttribute('aria-grabbed', 'false');
-      core.style.animationPlayState = 'running';
-    }
-    function handleMove(x, y) {
-      if (!isDragging) return;
-      const dx = (x - startX) / window.innerWidth;
-      const dy = (y - startY) / window.innerHeight;
-      targetRotY = clamp(targetRotY + dx * 0.6, 0.1, 0.9);
-      targetRotX = clamp(targetRotX - dy * 0.6, 0.1, 0.9);
-      startX = x; startY = y;
-    }
-
-    core.addEventListener('mousedown', e => { handleStart(e.clientX, e.clientY); e.preventDefault(); });
-    window.addEventListener('mousemove', e => handleMove(e.clientX, e.clientY));
-    window.addEventListener('mouseup', handleEnd);
-    core.addEventListener('touchstart', e => { handleStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
-    window.addEventListener('touchmove', e => handleMove(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
-    window.addEventListener('touchend', handleEnd);
-
-    core.addEventListener('keydown', e => {
-      const step = 0.04;
-      if (e.key === 'ArrowUp') { targetRotX = clamp(targetRotX - step, 0.1, 0.9); e.preventDefault(); }
-      if (e.key === 'ArrowDown') { targetRotX = clamp(targetRotX + step, 0.1, 0.9); e.preventDefault(); }
-      if (e.key === 'ArrowLeft') { targetRotY = clamp(targetRotY - step, 0.1, 0.9); e.preventDefault(); }
-      if (e.key === 'ArrowRight') { targetRotY = clamp(targetRotY + step, 0.1, 0.9); e.preventDefault(); }
-    });
-
-    // Auto-rotate when idle
-    function autoRotate3D() {
-      if (autoRotate && !isDragging) {
-        autoAngle += 0.003;
-        targetRotY = 0.5 + Math.sin(autoAngle) * 0.25;
-        targetRotX = 0.5 + Math.cos(autoAngle * 0.6) * 0.15;
-      }
-      requestAnimationFrame(autoRotate3D);
-    }
-    autoRotate3D();
-
-    // ===== SCROLL & MORPH =====
+    // ===== SCROLL & PROGRESS =====
     let ticking = false;
     function updateScroll() {
       const scroll = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const p = scroll / maxScroll;
+      const p = Math.min(scroll / maxScroll, 1);
       document.getElementById('progress').style.transform = `scaleX(${p})`;
       document.getElementById('progress').setAttribute('aria-valuenow', Math.round(p * 100));
-      document.body.style.setProperty('--scroll', scroll);
-      document.body.style.setProperty('--morph', Math.min(p * 1.4, 1));
+      morphTarget = p;
       ticking = false;
     }
     window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; } }, { passive: true });
@@ -621,15 +449,334 @@
     // ===== REVEAL OBSERVER =====
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-          observer.unobserve(entry.target);
-        }
+        if (entry.isIntersecting) { entry.target.classList.add('active'); observer.unobserve(entry.target); }
       });
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
     updateScroll();
+
+    // ===== PARTICLE GLOBE → DOLLAR BILLS MORPH =====
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let width, height, centerX, centerY;
+    let morphTarget = 0;
+    let morphCurrent = 0;
+    let mouseX = -9999, mouseY = -9999;
+    let isMouseOnCanvas = false;
+
+    // Particle configuration
+    const PARTICLE_COUNT = 2800;
+    const GLOBE_RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.18;
+    const REPULSION_RADIUS = 150;
+    const REPULSION_FORCE = 8;
+    const RETURN_FORCE = 0.03;
+    const DAMPING = 0.92;
+
+    // Colors
+    const GLOBE_COLORS = [
+      { r: 0, g: 255, b: 102 },    // accent green
+      { r: 0, g: 204, b: 82 },     // darker green
+      { r: 212, g: 175, b: 55 },   // gold
+      { r: 252, g: 246, b: 186 },  // light gold
+      { r: 170, g: 119, b: 28 },   // dark gold
+    ];
+
+    const BILL_COLORS = [
+      { r: 26, g: 77, b: 46 },     // dollar green
+      { r: 45, g: 90, b: 61 },     // lighter green
+      { r: 212, g: 175, b: 55 },   // gold accents
+      { r: 252, g: 246, b: 186 },  // gold highlights
+      { r: 191, g: 149, b: 63 },   // bronze gold
+    ];
+
+    // Resize handler
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      centerX = width / 2;
+      centerY = height / 2;
+    }
+    resize();
+    window.addEventListener('resize', () => { resize(); initParticles(); });
+
+    // Particle class
+    class Particle {
+      constructor(i, total) {
+        this.i = i;
+        this.total = total;
+        this.x = 0; this.y = 0; this.z = 0;
+        this.targetX = 0; this.targetY = 0; this.targetZ = 0;
+        this.vx = 0; this.vy = 0; this.vz = 0;
+        this.size = 0;
+        this.color = null;
+        this.colorIndex = Math.floor(Math.random() * GLOBE_COLORS.length);
+        this.phase = Math.random() * Math.PI * 2;
+        this.initGlobe();
+      }
+
+      initGlobe() {
+        // Fibonacci sphere distribution
+        const phi = Math.acos(1 - 2 * (this.i + 0.5) / this.total);
+        const theta = Math.PI * (1 + Math.sqrt(5)) * (this.i + 0.5);
+        const jitter = 0.85 + Math.random() * 0.3;
+        
+        this.globeX = GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta) * jitter;
+        this.globeY = GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta) * jitter;
+        this.globeZ = GLOBE_RADIUS * Math.cos(phi) * jitter;
+        
+        this.x = this.globeX; this.y = this.globeY; this.z = this.globeZ;
+        this.targetX = this.globeX; this.targetY = this.globeY; this.targetZ = this.globeZ;
+        this.size = 1.5 + Math.random() * 2;
+        this.color = GLOBE_COLORS[this.colorIndex];
+      }
+
+      initBill() {
+        // Create a stacked bill shape - multiple layers
+        const billW = Math.min(380, width * 0.35);
+        const billH = Math.min(160, width * 0.12);
+        const layers = 6;
+        const layerZ = 18;
+        const spreadX = billW / 2;
+        const spreadY = billH / 2;
+        
+        // Determine which layer this particle belongs to
+        const layerIndex = Math.floor((this.i / this.total) * layers) % layers;
+        const faceType = Math.floor(Math.random() * 6); // 6 faces of a box
+        
+        let fx, fy, fz;
+        
+        switch(faceType) {
+          case 0: // Front face
+            fx = (Math.random() - 0.5) * billW;
+            fy = (Math.random() - 0.5) * billH;
+            fz = layerIndex * layerZ - (layers * layerZ) / 2;
+            break;
+          case 1: // Back face
+            fx = (Math.random() - 0.5) * billW;
+            fy = (Math.random() - 0.5) * billH;
+            fz = layerIndex * layerZ - (layers * layerZ) / 2 + layerZ;
+            break;
+          case 2: // Top face
+            fx = (Math.random() - 0.5) * billW;
+            fy = layerIndex * layerZ / 2;
+            fz = (Math.random() - 0.5) * billH;
+            break;
+          case 3: // Bottom face
+            fx = (Math.random() - 0.5) * billW;
+            fy = -layerIndex * layerZ / 2;
+            fz = (Math.random() - 0.5) * billH;
+            break;
+          case 4: // Left edge (stacked look)
+            fx = -billW / 2;
+            fy = (Math.random() - 0.5) * billH;
+            fz = layerIndex * layerZ - (layers * layerZ) / 2 + Math.random() * layerZ;
+            break;
+          case 5: // Right edge
+            fx = billW / 2;
+            fy = (Math.random() - 0.5) * billH;
+            fz = layerIndex * layerZ - (layers * layerZ) / 2 + Math.random() * layerZ;
+            break;
+        }
+        
+        // Add some jitter for organic feel
+        const jitter = 3;
+        this.billX = fx + (Math.random() - 0.5) * jitter;
+        this.billY = fy + (Math.random() - 0.5) * jitter;
+        this.billZ = fz + (Math.random() - 0.5) * jitter;
+        
+        this.size = 2 + Math.random() * 2.5;
+        this.color = BILL_COLORS[Math.floor(Math.random() * BILL_COLORS.length)];
+      }
+
+      update(time) {
+        // Morph target
+        const morphT = morphCurrent;
+        
+        // Interpolate target position
+        this.targetX = this.globeX * (1 - morphT) + this.billX * morphT;
+        this.targetY = this.globeY * (1 - morphT) + this.billY * morphT;
+        this.targetZ = this.globeZ * (1 - morphT) + this.billZ * morphT;
+        
+        // Interpolate color
+        const gc = GLOBE_COLORS[this.colorIndex];
+        const bc = BILL_COLORS[this.colorIndex];
+        this.color = {
+          r: gc.r * (1 - morphT) + bc.r * morphT,
+          g: gc.g * (1 - morphT) + bc.g * morphT,
+          b: gc.b * (1 - morphT) + bc.b * morphT
+        };
+
+        // Cursor repulsion (only in 2D screen space)
+        if (isMouseOnCanvas) {
+          const screenX = centerX + this.targetX;
+          const screenY = centerY + this.targetY;
+          const dx = screenX - mouseX;
+          const dy = screenY - mouseY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < REPULSION_RADIUS && dist > 0) {
+            const force = (1 - dist / REPULSION_RADIUS) * REPULSION_FORCE;
+            this.vx += (dx / dist) * force;
+            this.vy += (dy / dist) * force;
+          }
+        }
+
+        // Spring physics toward target
+        this.vx += (this.targetX - this.x) * RETURN_FORCE;
+        this.vy += (this.targetY - this.y) * RETURN_FORCE;
+        this.vz += (this.targetZ - this.z) * RETURN_FORCE * 0.5;
+        
+        // Damping
+        this.vx *= DAMPING;
+        this.vy *= DAMPING;
+        this.vz *= DAMPING;
+        
+        // Update position
+        this.x += this.vx;
+        this.y += this.vy;
+        this.z += this.vz;
+      }
+
+      draw(time) {
+        const screenX = centerX + this.x;
+        const screenY = centerY + this.y;
+        
+        // Perspective projection for depth
+        const perspective = 800;
+        const scale = perspective / (perspective + this.z);
+        const projectedX = centerX + this.x * scale;
+        const projectedY = centerY + this.y * scale;
+        const projectedSize = this.size * scale;
+        const alpha = Math.max(0.2, Math.min(1, 0.5 + scale * 0.5));
+        
+        // Glow effect
+        const { r, g, b } = this.color;
+        
+        ctx.beginPath();
+        ctx.arc(projectedX, projectedY, projectedSize, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha})`;
+        ctx.fill();
+        
+        // Subtle glow
+        if (projectedSize > 2.5) {
+          ctx.beginPath();
+          ctx.arc(projectedX, projectedY, projectedSize * 2.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha * 0.15})`;
+          ctx.fill();
+        }
+      }
+    }
+
+    // Initialize particles
+    let particles = [];
+    function initParticles() {
+      particles = [];
+      const r = Math.min(width, height) * 0.18;
+      for (let i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle(i, PARTICLE_COUNT));
+      }
+    }
+    initParticles();
+
+    // Mouse tracking
+    canvas.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      isMouseOnCanvas = true;
+      
+      // Update CSS variable for background atmosphere
+      document.body.style.setProperty('--mx', (mouseX / width).toFixed(3));
+      document.body.style.setProperty('--my', (mouseY / height).toFixed(3));
+    });
+    
+    canvas.addEventListener('mouseleave', () => {
+      isMouseOnCanvas = false;
+      mouseX = -9999;
+      mouseY = -9999;
+    });
+    
+    canvas.addEventListener('touchmove', (e) => {
+      mouseX = e.touches[0].clientX;
+      mouseY = e.touches[0].clientY;
+      isMouseOnCanvas = true;
+    }, { passive: true });
+    
+    canvas.addEventListener('touchend', () => {
+      isMouseOnCanvas = false;
+    });
+
+    // Animation loop
+    let time = 0;
+    function animate() {
+      time += 0.01;
+      
+      // Smooth morph transition
+      morphCurrent += (morphTarget - morphCurrent) * 0.04;
+      
+      // Update morph indicator
+      const morphBar = document.getElementById('morphBarFill');
+      const morphIndicator = document.getElementById('morphIndicator');
+      if (morphBar) morphBar.style.width = (morphCurrent * 100) + '%';
+      if (morphIndicator) {
+        if (morphCurrent > 0.8) morphIndicator.classList.add('hidden');
+        else if (morphCurrent < 0.2) morphIndicator.classList.add('hidden');
+        else morphIndicator.classList.remove('hidden');
+      }
+      
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+      
+      // Draw connection lines between close particles (only when globe)
+      if (morphCurrent < 0.3) {
+        const lineAlpha = (1 - morphCurrent / 0.3) * 0.08;
+        ctx.strokeStyle = `rgba(0, 255, 102, ${lineAlpha})`;
+        ctx.lineWidth = 0.5;
+        
+        // Sample every N particles for performance
+        const step = 8;
+        const maxDist = 60;
+        for (let i = 0; i < particles.length; i += step) {
+          const p1 = particles[i];
+          const sx1 = centerX + p1.x;
+          const sy1 = centerY + p1.y;
+          
+          for (let j = i + step; j < particles.length; j += step) {
+            const p2 = particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            if (dist < maxDist) {
+              ctx.beginPath();
+              ctx.moveTo(sx1, sy1);
+              ctx.lineTo(centerX + p2.x, centerY + p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+      
+      // Update and draw particles
+      for (const p of particles) {
+        p.update(time);
+        p.draw(time);
+      }
+      
+      // Draw cursor glow
+      if (isMouseOnCanvas) {
+        const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 200);
+        gradient.addColorStop(0, 'rgba(0, 255, 102, 0.08)');
+        gradient.addColorStop(0.5, 'rgba(0, 255, 102, 0.03)');
+        gradient.addColorStop(1, 'rgba(0, 255, 102, 0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(mouseX - 200, mouseY - 200, 400, 400);
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    animate();
   </script>
 </body>
 </html>
