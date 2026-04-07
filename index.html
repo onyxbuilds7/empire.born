@@ -21,61 +21,54 @@
   
   <style>
     :root {
-      --bg: #030303; --bg-elev: #080808; --text: #f5f5f5; --text-dim: #a0a0a0;
+      --bg: #030303; --bg-elev: #0a0a0a; --text: #f5f5f5; --text-dim: #a0a0a0;
       --text-muted: #555; --accent: #00ff66; --gold: #d4af37;
-      --border: rgba(255,255,255,0.06); --border-hover: rgba(255,255,255,0.18);
-      --font-display: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
-      --font-mono: 'Space Mono', monospace;
+      --glass: rgba(255, 255, 255, 0.03); --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-hover: rgba(255, 255, 255, 0.06);
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      --font-display: 'Syne', sans-serif; --font-body: 'Inter', sans-serif;
+      --font-mono: 'Space Mono', monospace;
     }
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
     }
-    
     html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-    
     body {
-      background: var(--bg); color: var(--text);
-      font-family: var(--font-body); line-height: 1.6;
-      overflow-x: hidden; min-height: 100vh;
+      background: var(--bg); color: var(--text); font-family: var(--font-body);
+      line-height: 1.6; overflow-x: hidden; min-height: 100vh;
     }
 
     .skip-link {
-      position: absolute; top: -40px; left: 0;
-      background: var(--accent); color: #000;
-      padding: 0.6rem 1.2rem; z-index: 10001;
-      text-decoration: none; font-family: var(--font-mono);
-      font-size: 0.75rem; font-weight: 700; transition: top 0.2s;
+      position: absolute; top: -40px; left: 0; background: var(--accent); color: #000;
+      padding: 0.6rem 1.2rem; z-index: 10001; text-decoration: none;
+      font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700; transition: top 0.2s;
     }
     .skip-link:focus { top: 0; outline: 2px solid #fff; }
     :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 
-    /* Background */
-    .bg-atmosphere {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(circle at 50% 50%, rgba(0,255,102,0.06) 0%, transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(212,175,55,0.05) 0%, transparent 35%),
-                  var(--bg);
-      transition: background 0.5s;
-    }
-    .bg-vignette {
-      position: fixed; inset: 0; z-index: -1; pointer-events: none;
-      background: radial-gradient(ellipse at center, transparent 30%, rgba(0,0,0,0.9) 100%);
-    }
-    .bg-noise {
-      position: fixed; inset: 0; z-index: 9999; pointer-events: none; opacity: 0.025;
-      background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    /* Background Canvas */
+    #particleCanvas {
+      position: fixed; inset: 0; z-index: 1; pointer-events: none;
     }
 
-    /* Particle Canvas */
-    #particleCanvas {
-      position: fixed; inset: 0; z-index: 1; pointer-events: auto;
-      cursor: crosshair;
+    /* Glass Navigation */
+    .glass-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 1.2rem 3rem; display: flex; justify-content: space-between; align-items: center;
+      background: rgba(3, 3, 3, 0.6); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--glass-border); transition: all 0.3s var(--ease-smooth);
     }
+    .glass-nav.scrolled { padding: 0.8rem 3rem; background: rgba(3, 3, 3, 0.85); }
+    .logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; cursor: pointer; transition: opacity 0.3s; }
+    .logo:hover { opacity: 0.8; }
+    .nav-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); text-decoration: none; transition: opacity 0.3s; }
+    .nav-link:hover { opacity: 0.7; }
+
+    /* Progress Bar */
+    .progress { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--gold)); z-index: 1000; transform-origin: left; transition: transform 0.1s; }
 
     /* Typography */
     .display { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.04em; line-height: 0.88; }
@@ -86,66 +79,12 @@
     .body-md { font-size: clamp(0.9rem, 2vw, 1.05rem); line-height: 1.6; }
     .mono { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); }
 
-    /* Loader */
-    #loader {
-      position: fixed; inset: 0; background: #000; z-index: 10000;
-      display: flex; align-items: center; justify-content: center;
-      transition: transform 1s var(--ease-out);
-    }
-    #loader.hide { transform: translateY(-100%); }
-    .loader-content { text-align: center; }
-    .loader-text { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 0.35em; margin-bottom: 2rem; animation: pulse 2s infinite; }
-    .loader-bar { width: 220px; height: 1px; background: var(--border); position: relative; overflow: hidden; }
-    .loader-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--accent); width: 0%; transition: width 0.1s linear; box-shadow: 0 0 15px var(--accent); }
-    @keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
-
-    /* Nav */
-    nav {
-      position: fixed; top: 0; width: 100%; padding: 2rem 3rem;
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 100; mix-blend-mode: difference; pointer-events: none;
-    }
-    nav > * { pointer-events: auto; }
-    .logo { font-family: var(--font-display); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.02em; cursor: pointer; transition: opacity 0.3s; }
-    .logo:hover { opacity: 0.8; }
-    .nav-link { font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text); text-decoration: none; transition: opacity 0.3s; }
-    .nav-link:hover { opacity: 0.7; }
-
-    /* Progress */
-    .progress { position: fixed; top: 0; left: 0; height: 1px; background: var(--accent); z-index: 1000; transform-origin: left; transition: transform 0.1s; }
-
-    /* Morph indicator */
-    .morph-indicator {
-      position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-      z-index: 50; display: flex; align-items: center; gap: 1rem;
-      font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.2em;
-      color: var(--text-muted); opacity: 0.6; transition: opacity 0.3s;
-      pointer-events: none;
-    }
-    .morph-indicator.hidden { opacity: 0; }
-    .morph-bar {
-      width: 120px; height: 2px; background: var(--border); border-radius: 1px;
-      position: relative; overflow: hidden;
-    }
-    .morph-bar-fill {
-      position: absolute; left: 0; top: 0; height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--gold));
-      width: 0%; transition: width 0.3s;
-    }
-
-    /* Content */
-    .content { position: relative; z-index: 10; pointer-events: none; }
-    .content > * { pointer-events: auto; }
-    section {
-      min-height: 100vh; padding: clamp(5rem, 12vh, 10rem) clamp(1.5rem, 6vw, 5rem);
-      display: flex; flex-direction: column; justify-content: center;
-    }
-    
+    /* Sections */
+    section { min-height: 100vh; padding: clamp(6rem, 14vh, 12rem) clamp(1.5rem, 6vw, 5rem); display: flex; flex-direction: column; justify-content: center; position: relative; z-index: 10; }
     .section-label {
-      font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em;
-      text-transform: uppercase; color: var(--text-muted); margin-bottom: 2.5rem;
-      padding-bottom: 0.8rem; border-bottom: 1px solid var(--border); display: inline-block;
-      position: relative;
+      font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--text-muted); margin-bottom: 2.5rem; padding-bottom: 0.8rem; border-bottom: 1px solid var(--glass-border);
+      display: inline-block; position: relative;
     }
     .section-label::after {
       content: ''; position: absolute; bottom: -1px; left: 0; height: 1px; width: 0;
@@ -154,84 +93,147 @@
     section:hover .section-label::after { width: 60px; }
 
     /* Hero */
-    .hero { max-width: 1100px; }
+    .hero { max-width: 1100px; align-items: flex-start; }
     .hero-label { font-family: var(--font-mono); font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 2rem; display: flex; align-items: center; gap: 1rem; }
-    .hero-label::after { content: ''; flex: 1; height: 1px; background: var(--border); max-width: 180px; }
-    h1 { margin-bottom: 2rem; background: linear-gradient(135deg, #fff 0%, #999 50%, #fff 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: textShine 8s linear infinite; }
-    @keyframes textShine { to { background-position: 200% center; } }
+    .hero-label::after { content: ''; flex: 1; height: 1px; background: var(--glass-border); max-width: 180px; }
+    h1 { margin-bottom: 2rem; background: linear-gradient(135deg, #fff 0%, #00ff66 50%, #d4af37 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: gradientShift 8s ease infinite; }
+    @keyframes gradientShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     .hero-sub { max-width: 480px; margin-bottom: 3.5rem; color: var(--text-dim); }
     
-    .cta-group { display: flex; gap: 1.2rem; flex-wrap: wrap; }
-    .btn {
-      padding: 1.1rem 2.4rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em;
-      text-transform: uppercase; text-decoration: none; border: 1px solid var(--border);
+    /* Magnetic Button */
+    .magnetic-btn {
+      padding: 1.2rem 2.6rem; font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.14em;
+      text-transform: uppercase; text-decoration: none; border: 1px solid var(--glass-border);
       background: transparent; color: var(--text); cursor: pointer;
-      transition: all 0.35s var(--ease-out); position: relative; overflow: hidden;
+      transition: all 0.3s var(--ease-out); position: relative; overflow: hidden;
       display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
-      border-radius: 2px;
+      border-radius: 4px; transform: translateZ(0);
     }
-    .btn::before {
+    .magnetic-btn::before {
       content: ''; position: absolute; inset: 0; background: var(--text);
       transform: scaleX(0); transform-origin: right; transition: transform 0.4s var(--ease-out); z-index: -1;
     }
-    .btn:hover::before { transform: scaleX(1); transform-origin: left; }
-    .btn:hover { color: var(--bg); border-color: var(--text); transform: translateY(-2px); }
-    .btn-primary { background: var(--text); color: var(--bg); border-color: var(--text); }
-    .btn-primary::before { background: var(--accent); }
-    .btn-primary:hover { color: var(--bg); }
-    .btn:active { transform: translateY(0) scale(0.98); }
+    .magnetic-btn:hover::before { transform: scaleX(1); transform-origin: left; }
+    .magnetic-btn:hover { color: var(--bg); border-color: var(--text); }
+    .magnetic-btn.primary { background: var(--text); color: var(--bg); border-color: var(--text); }
+    .magnetic-btn.primary::before { background: var(--accent); }
+    .magnetic-btn.primary:hover { color: var(--bg); }
+    .cta-group { display: flex; gap: 1.2rem; flex-wrap: wrap; }
 
-    /* Grid */
-    .showcase-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1px; background: var(--border); margin-top: 3rem; border-radius: 4px; overflow: hidden; }
-    .showcase-item {
-      background: var(--bg-elev); padding: 3.5rem 2.5rem; transition: all 0.4s var(--ease-out);
-      cursor: pointer; position: relative; overflow: hidden;
+    /* Bento Grid Stats */
+    .bento-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(140px, auto);
+      gap: 1rem; margin-top: 3rem;
     }
-    .showcase-item::before {
-      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at var(--mx) var(--my), rgba(0,255,102,0.06) 0%, transparent 50%);
-      opacity: 0; transition: opacity 0.4s; pointer-events: none;
+    .bento-item {
+      background: var(--glass); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border); border-radius: 8px; padding: 2rem;
+      transition: all 0.35s var(--ease-out); position: relative; overflow: hidden;
     }
-    .showcase-item:hover::before { opacity: 1; }
-    .showcase-item:hover { background: var(--bg); transform: translateY(-4px); }
-    .showcase-num { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); margin-bottom: 1.2rem; }
-    .showcase-title { font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 700; margin-bottom: 0.8rem; line-height: 1.1; }
-    .showcase-desc { font-size: 0.92rem; color: var(--text-dim); line-height: 1.65; }
+    .bento-item:hover { background: var(--glass-hover); transform: translateY(-4px); border-color: rgba(255,255,255,0.15); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
+    .bento-item.wide { grid-column: span 2; }
+    .bento-item.tall { grid-row: span 2; }
+    .stat-value { font-family: var(--font-display); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 700; margin-bottom: 0.5rem; background: linear-gradient(135deg, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .stat-label { font-family: var(--font-mono); font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.1em; }
+    .stat-desc { font-size: 0.9rem; color: var(--text-dim); margin-top: 0.8rem; line-height: 1.5; }
 
-    /* Specs */
-    .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2rem; margin-top: 4rem; }
-    .spec-item {
-      padding: 2.5rem; border: 1px solid var(--border); border-radius: 4px;
-      transition: all 0.35s var(--ease-out); background: rgba(255,255,255,0.01);
+    /* 3D Tilt Cards */
+    .tilt-card {
+      background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--glass-border);
+      border-radius: 8px; padding: 2.5rem; transition: transform 0.1s ease, box-shadow 0.3s;
+      transform-style: preserve-3d; perspective: 1000px; cursor: pointer;
     }
-    .spec-item:hover { border-color: var(--border-hover); transform: translateY(-3px); background: rgba(255,255,255,0.02); box-shadow: 0 15px 40px rgba(0,0,0,0.4); }
-    .spec-label { font-family: var(--font-mono); font-size: 0.6rem; color: var(--text-muted); margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; }
-    .spec-value { font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 700; margin-bottom: 0.6rem; background: linear-gradient(135deg, #fff, #aaa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .spec-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.6; }
+    .tilt-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.6); border-color: rgba(255,255,255,0.15); }
+    .tilt-content { transform: translateZ(30px); }
+    .tilt-card h3 { font-family: var(--font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 0.8rem; }
+    .tilt-card p { font-size: 0.95rem; color: var(--text-dim); line-height: 1.6; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+
+    /* Process Stepper */
+    .stepper { display: flex; flex-direction: column; gap: 3rem; margin-top: 3rem; position: relative; }
+    .stepper::before { content: ''; position: absolute; left: 20px; top: 0; bottom: 0; width: 1px; background: var(--glass-border); }
+    .step { display: flex; gap: 2rem; align-items: flex-start; position: relative; }
+    .step-num {
+      width: 40px; height: 40px; border-radius: 50%; background: var(--bg); border: 2px solid var(--glass-border);
+      display: flex; align-items: center; justify-content: center; font-family: var(--font-mono);
+      font-size: 0.8rem; color: var(--text-muted); flex-shrink: 0; z-index: 2; transition: all 0.3s;
+    }
+    .step.active .step-num { border-color: var(--accent); color: var(--accent); background: rgba(0,255,102,0.1); box-shadow: 0 0 20px rgba(0,255,102,0.2); }
+    .step-content h3 { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .step-content p { color: var(--text-dim); max-width: 600px; }
+
+    /* Testimonials */
+    .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .testimonial-card {
+      background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; padding: 2rem;
+      transition: all 0.35s var(--ease-out);
+    }
+    .testimonial-card:hover { transform: translateY(-4px); background: var(--glass-hover); }
+    .testimonial-text { font-size: 1rem; line-height: 1.6; color: var(--text-dim); margin-bottom: 1.5rem; font-style: italic; }
+    .testimonial-author { display: flex; align-items: center; gap: 1rem; }
+    .author-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--gold)); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; }
+    .author-info h4 { font-size: 0.95rem; font-weight: 600; }
+    .author-info span { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* FAQ Accordion */
+    .faq-list { margin-top: 3rem; display: flex; flex-direction: column; gap: 1rem; max-width: 800px; }
+    .faq-item { border: 1px solid var(--glass-border); border-radius: 8px; overflow: hidden; background: var(--glass); transition: all 0.3s; }
+    .faq-item:hover { border-color: rgba(255,255,255,0.15); }
+    .faq-question {
+      padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center;
+      cursor: pointer; font-weight: 600; font-size: 1.05rem; transition: color 0.3s;
+    }
+    .faq-question:hover { color: var(--accent); }
+    .faq-icon { width: 20px; height: 20px; transition: transform 0.3s var(--ease-out); }
+    .faq-item.active .faq-icon { transform: rotate(45deg); }
+    .faq-answer {
+      max-height: 0; overflow: hidden; transition: max-height 0.4s var(--ease-out), padding 0.4s;
+      padding: 0 2rem; color: var(--text-dim); line-height: 1.6;
+    }
+    .faq-item.active .faq-answer { max-height: 200px; padding: 0 2rem 1.5rem; }
 
     /* Tiers */
-    .tiers { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1px; background: var(--border); margin-top: 3rem; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
-    .tier { background: var(--bg-elev); padding: 3.5rem 2.5rem; position: relative; transition: all 0.4s var(--ease-out); }
-    .tier:hover { background: var(--bg); transform: translateY(-4px); }
-    .tier-badge { position: absolute; top: 1.8rem; right: 1.8rem; font-family: var(--font-mono); font-size: 0.55rem; padding: 0.35rem 0.7rem; border: 1px solid var(--border); border-radius: 2px; }
-    .tier-badge.featured { border-color: var(--accent); color: var(--accent); background: rgba(0,255,102,0.05); }
-    .tier-name { font-family: var(--font-display); font-size: 1.9rem; font-weight: 700; margin-bottom: 0.6rem; }
-    .tier-desc { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 2.5rem; line-height: 1.6; }
-    .tier-specs { list-style: none; }
-    .tier-specs li { font-size: 0.82rem; color: var(--text-dim); padding: 0.7rem 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
-    .tier-specs li:last-child { border-bottom: none; }
+    .tiers-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+    .tier-card {
+      background: var(--glass); border: 1px solid var(--glass-border); border-radius: 8px; padding: 2.5rem;
+      position: relative; transition: all 0.35s var(--ease-out); display: flex; flex-direction: column;
+    }
+    .tier-card:hover { transform: translateY(-6px); background: var(--glass-hover); box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .tier-card.featured { border-color: var(--accent); background: rgba(0,255,102,0.03); }
+    .tier-badge { position: absolute; top: 1.5rem; right: 1.5rem; font-family: var(--font-mono); font-size: 0.55rem; padding: 0.35rem 0.7rem; border: 1px solid var(--glass-border); border-radius: 4px; }
+    .tier-card.featured .tier-badge { border-color: var(--accent); color: var(--accent); background: rgba(0,255,102,0.1); }
+    .tier-name { font-family: var(--font-display); font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .tier-price { font-size: 2.5rem; font-weight: 800; margin: 1rem 0; }
+    .tier-price span { font-size: 1rem; color: var(--text-muted); font-weight: 400; }
+    .tier-features { list-style: none; margin: 1.5rem 0; flex-grow: 1; }
+    .tier-features li { padding: 0.6rem 0; border-bottom: 1px solid var(--glass-border); font-size: 0.9rem; color: var(--text-dim); display: flex; align-items: center; gap: 0.5rem; }
+    .tier-features li::before { content: '✓'; color: var(--accent); font-weight: 700; }
 
-    /* Manifesto */
-    .manifesto { text-align: center; max-width: 850px; margin: 0 auto; padding: 2rem 0; }
-    .manifesto h2 { font-family: var(--font-display); font-size: clamp(2rem, 5.5vw, 4.2rem); font-weight: 700; line-height: 1.15; margin-bottom: 2rem; }
-    .manifesto-quote { font-size: clamp(1.05rem, 2.2vw, 1.35rem); line-height: 1.7; color: var(--text-dim); font-style: italic; }
+    /* Final CTA */
+    .cta-final { text-align: center; padding: 10rem 2rem; position: relative; overflow: hidden; }
+    .cta-final::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(circle at center, rgba(0,255,102,0.1) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .cta-final h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 800; margin-bottom: 2rem; line-height: 0.95; }
+    .cta-final p { color: var(--text-dim); margin-bottom: 3.5rem; max-width: 520px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
+    .glow-btn {
+      position: relative; padding: 1.4rem 3rem; font-family: var(--font-mono); font-size: 0.8rem;
+      letter-spacing: 0.15em; text-transform: uppercase; border: none; background: var(--accent);
+      color: #000; font-weight: 700; cursor: pointer; border-radius: 4px; transition: all 0.3s;
+      box-shadow: 0 0 30px rgba(0,255,102,0.3);
+    }
+    .glow-btn:hover { transform: translateY(-3px); box-shadow: 0 0 50px rgba(0,255,102,0.5); }
+    .glow-btn:active { transform: translateY(0); }
 
-    /* Footer CTA */
-    .footer-cta { text-align: center; padding: 8rem 2rem; }
-    .footer-cta h2 { font-family: var(--font-display); font-size: clamp(2.5rem, 8vw, 6rem); font-weight: 800; margin-bottom: 2rem; line-height: 0.95; }
-    .footer-cta p { color: var(--text-dim); margin-bottom: 3.5rem; max-width: 520px; margin-left: auto; margin-right: auto; font-size: 1.05rem; }
+    /* Footer */
+    footer { padding: 4rem clamp(1.5rem, 6vw, 5rem); border-top: 1px solid var(--glass-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 2rem; z-index: 10; position: relative; }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--text); }
 
-    /* Reveal */
+    /* Reveal Animations */
     .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
     .reveal.active { opacity: 1; transform: translateY(0); }
     .reveal.delay-1 { transition-delay: 0.1s; }
@@ -239,171 +241,255 @@
     .reveal.delay-3 { transition-delay: 0.3s; }
 
     /* Responsive */
+    @media (max-width: 1024px) { .bento-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 768px) {
-      nav { padding: 1.5rem; }
-      .showcase-grid, .tiers { grid-template-columns: 1fr; }
+      .glass-nav { padding: 1rem 1.5rem; }
+      .bento-grid { grid-template-columns: 1fr; }
+      .bento-item.wide, .bento-item.tall { grid-column: span 1; grid-row: span 1; }
       .cta-group { flex-direction: column; }
-      .btn { width: 100%; text-align: center; }
+      .magnetic-btn { width: 100%; text-align: center; }
+      footer { flex-direction: column; text-align: center; }
+      .footer-links { flex-direction: column; gap: 1rem; }
     }
 
     @media (prefers-contrast: high) {
-      :root { --border: rgba(255,255,255,0.25); --text-dim: #ccc; }
-      .btn { border-width: 2px; }
+      :root { --glass-border: rgba(255,255,255,0.25); --text-dim: #ccc; }
+      .magnetic-btn { border-width: 2px; }
     }
-    
     @media print {
-      #particleCanvas, nav, .progress, #loader, .bg-atmosphere, .bg-vignette, .bg-noise { display: none; }
+      #particleCanvas, .glass-nav, .progress { display: none; }
       body { background: #fff; color: #000; }
     }
   </style>
 </head>
 <body>
   <a href="#main" class="skip-link">Skip to content</a>
+  <canvas id="particleCanvas"></canvas>
 
-  <div class="bg-atmosphere" aria-hidden="true"></div>
-  <div class="bg-vignette" aria-hidden="true"></div>
-  <div class="bg-noise" aria-hidden="true"></div>
-
-  <canvas id="particleCanvas" aria-hidden="true"></canvas>
-
-  <!-- Morph Indicator -->
-  <div class="morph-indicator" id="morphIndicator">
-    <span>GLOBE</span>
-    <div class="morph-bar"><div class="morph-bar-fill" id="morphBarFill"></div></div>
-    <span>BILLS</span>
-  </div>
-
-  <div id="loader" role="status" aria-live="polite" aria-busy="true">
-    <div class="loader-content">
-      <div class="loader-text">INITIALIZING EMPIRE SYSTEMS</div>
-      <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
-    </div>
-  </div>
-
-  <div class="progress" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-
-  <nav role="navigation" aria-label="Main">
+  <nav class="glass-nav" id="nav">
     <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" tabindex="0" role="button" aria-label="Scroll to top">EMPIRE.BORN</div>
     <a href="https://instagram.com/empire.born" class="nav-link" onclick="openInstagram(event)" aria-label="Follow on Instagram" target="_blank" rel="noopener noreferrer">@empire.born</a>
   </nav>
 
-  <div class="content" id="main">
-    <section class="hero reveal" aria-labelledby="hero-heading">
-      <div class="hero-label">System v2.0.26</div>
-      <h1 class="display heading-xl" id="hero-heading">Wealth<br>Architecture.</h1>
+  <div class="progress" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero reveal">
+      <div class="hero-label">System v3.0.26</div>
+      <h1 class="display heading-xl">Wealth<br>Architecture.</h1>
       <p class="hero-sub body-lg">Not just money. Systems. Structures. Empires. Built for those who refuse to play by someone else's rules.</p>
       <div class="cta-group">
-        <a href="https://instagram.com/empire.born" class="btn btn-primary" onclick="openInstagram(event)" target="_blank" rel="noopener noreferrer">Join The Empire</a>
-        <a href="#framework" class="btn">Explore Framework</a>
+        <button class="magnetic-btn primary" onclick="openInstagram(event)">Join The Empire</button>
+        <button class="magnetic-btn" onclick="document.getElementById('features').scrollIntoView({behavior: 'smooth'})">Explore Framework</button>
       </div>
     </section>
 
-    <section id="framework" class="reveal" aria-labelledby="framework-heading">
-      <div class="section-label" id="framework-heading">The Framework</div>
-      <div class="showcase-grid" role="list">
-        <div class="showcase-item reveal delay-1" role="listitem" tabindex="0">
-          <div class="showcase-num">01</div>
-          <h3 class="showcase-title">Cold Logic</h3>
-          <p class="showcase-desc body-md">Emotion is volatility. Volatility is risk. We eliminate risk through pure algorithmic thinking.</p>
+    <!-- Stats Bento -->
+    <section class="reveal">
+      <div class="section-label">Performance Metrics</div>
+      <div class="bento-grid">
+        <div class="bento-item wide reveal delay-1">
+          <div class="stat-value" data-target="99.97" data-suffix="%">0%</div>
+          <div class="stat-label">Execution Precision</div>
+          <div class="stat-desc">Algorithmic accuracy in volatile markets. The 0.03% is reserved for black swan events.</div>
         </div>
-        <div class="showcase-item reveal delay-2" role="listitem" tabindex="0">
-          <div class="showcase-num">02</div>
-          <h3 class="showcase-title">Kinetic Force</h3>
-          <p class="showcase-desc body-md">Momentum isn't created—it's captured. We teach you to harvest energy from chaos.</p>
+        <div class="bento-item reveal delay-2">
+          <div class="stat-value" data-target="24" data-suffix="/7">0/7</div>
+          <div class="stat-label">Uptime</div>
+          <div class="stat-desc">Markets never sleep. Neither do we.</div>
         </div>
-        <div class="showcase-item reveal delay-3" role="listitem" tabindex="0">
-          <div class="showcase-num">03</div>
-          <h3 class="showcase-title">Infinite Time</h3>
-          <p class="showcase-desc body-md">Build for centuries, not quarters. Your empire should outlive your biology.</p>
+        <div class="bento-item reveal delay-3">
+          <div class="stat-value" data-target="0" data-suffix="">0.0</div>
+          <div class="stat-label">Emotional Drag</div>
+          <div class="stat-desc">Zero volatility. Pure logic.</div>
         </div>
-      </div>
-    </section>
-
-    <section class="reveal" aria-labelledby="specs-heading">
-      <div class="section-label" id="specs-heading">Technical Specifications</div>
-      <div class="specs" role="list">
-        <div class="spec-item reveal delay-1" role="listitem">
-          <div class="spec-label">Precision</div>
-          <div class="spec-value">99.97%</div>
-          <div class="spec-desc body-md">Accuracy in execution. The 0.03% is for black swans.</div>
+        <div class="bento-item tall reveal delay-1">
+          <div class="stat-value" data-target="150" data-suffix="+">0+</div>
+          <div class="stat-label">Sovereign Members</div>
+          <div class="stat-desc">Architects building generational wealth across 12 countries. Access is by application only.</div>
         </div>
-        <div class="spec-item reveal delay-2" role="listitem">
-          <div class="spec-label">Uptime</div>
-          <div class="spec-value">24/7/365</div>
-          <div class="spec-desc body-md">Markets never sleep. Neither do we. No cloud required.</div>
-        </div>
-        <div class="spec-item reveal delay-3" role="listitem">
-          <div class="spec-label">ROI Horizon</div>
-          <div class="spec-value">∞</div>
-          <div class="spec-desc body-md">Infinite. We're building dynasties, not day trades.</div>
-        </div>
-        <div class="spec-item reveal delay-1" role="listitem">
-          <div class="spec-label">Emotional Drag</div>
-          <div class="spec-value">0.0</div>
-          <div class="spec-desc body-md">Zero. Pure logic. Pure execution. Pure results.</div>
+        <div class="bento-item reveal delay-2">
+          <div class="stat-value" data-target="4.2" data-suffix="x">0x</div>
+          <div class="stat-label">Avg. ROI</div>
+          <div class="stat-desc">Within 24 months of system deployment.</div>
         </div>
       </div>
     </section>
 
-    <section class="manifesto reveal" aria-labelledby="manifesto-heading">
-      <div class="section-label" id="manifesto-heading" style="text-align: center; border: none;">The Philosophy</div>
-      <h2>"Perfection isn't addition. It's subtraction."</h2>
-      <p class="manifesto-quote">Remove the noise. Remove the emotion. Remove the doubt. What remains is the system. And the system prints.</p>
+    <!-- Features -->
+    <section id="features" class="reveal">
+      <div class="section-label">Core Architecture</div>
+      <div class="features-grid">
+        <div class="tilt-card reveal delay-1">
+          <div class="tilt-content">
+            <h3>Cold Logic</h3>
+            <p>Emotion is volatility. Volatility is risk. We eliminate risk through pure algorithmic thinking and deterministic execution paths.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal delay-2">
+          <div class="tilt-content">
+            <h3>Kinetic Force</h3>
+            <p>Momentum isn't created—it's captured. We teach you to harvest energy from market chaos and convert it into predictable yield.</p>
+          </div>
+        </div>
+        <div class="tilt-card reveal delay-3">
+          <div class="tilt-content">
+            <h3>Infinite Horizon</h3>
+            <p>Build for centuries, not quarters. Your empire should outlive your biology. We engineer legacy, not liquidity.</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <section class="reveal" aria-labelledby="tiers-heading">
-      <div class="section-label" id="tiers-heading">Access Levels</div>
-      <div class="tiers" role="list">
-        <div class="tier reveal delay-1" role="listitem">
-          <div class="tier-badge">LEVEL 01</div>
-          <h3 class="tier-name">Initiate</h3>
-          <p class="tier-desc body-md">Foundation protocols. Learn the architecture before you build it.</p>
-          <ul class="tier-specs" aria-label="Initiate features">
-            <li><span>Core Systems</span> <span>✓</span></li>
-            <li><span>Logic Framework</span> <span>✓</span></li>
-            <li><span>Community Access</span> <span>✓</span></li>
-            <li><span>Mentorship</span> <span>—</span></li>
-            <li><span>Asset Protocols</span> <span>—</span></li>
+    <!-- Process -->
+    <section class="reveal">
+      <div class="section-label">Deployment Protocol</div>
+      <div class="stepper">
+        <div class="step reveal delay-1">
+          <div class="step-num">01</div>
+          <div class="step-content">
+            <h3>Audit & Align</h3>
+            <p>We analyze your current financial architecture, identify structural weaknesses, and map the optimal path to sovereignty.</p>
+          </div>
+        </div>
+        <div class="step reveal delay-2">
+          <div class="step-num">02</div>
+          <div class="step-content">
+            <h3>System Integration</h3>
+            <p>Deploy the framework. Connect logic modules, automate execution, and establish real-time monitoring dashboards.</p>
+          </div>
+        </div>
+        <div class="step reveal delay-3">
+          <div class="step-num">03</div>
+          <div class="step-content">
+            <h3>Compound & Scale</h3>
+            <p>Watch the system print. Reinvest yields, expand asset classes, and transition from participant to architect.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="reveal">
+      <div class="section-label">Sovereign Voices</div>
+      <div class="testimonials-grid">
+        <div class="testimonial-card reveal delay-1">
+          <p class="testimonial-text">"I spent years chasing alpha. empire.born taught me to build the machine that prints it. Life-changing."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">K</div>
+            <div class="author-info"><h4>Kael M.</h4><span>Architect Tier</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal delay-2">
+          <p class="testimonial-text">"The framework stripped away every emotional bias I had. Now it's just pure execution. Cold. Precise. Profitable."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">S</div>
+            <div class="author-info"><h4>Sarah V.</h4><span>Sovereign Tier</span></div>
+          </div>
+        </div>
+        <div class="testimonial-card reveal delay-3">
+          <p class="testimonial-text">"Not a course. Not a group chat. This is actual infrastructure for wealth. My portfolio hasn't looked back."</p>
+          <div class="testimonial-author">
+            <div class="author-avatar">J</div>
+            <div class="author-info"><h4>James R.</h4><span>Architect Tier</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tiers -->
+    <section class="reveal">
+      <div class="section-label">Access Levels</div>
+      <div class="tiers-grid">
+        <div class="tier-card reveal delay-1">
+          <div class="tier-badge">INITIATE</div>
+          <h3 class="tier-name">Foundation</h3>
+          <div class="tier-price">$497<span>/one-time</span></div>
+          <ul class="tier-features">
+            <li>Core Logic Framework</li>
+            <li>Market Analysis Tools</li>
+            <li>Community Access</li>
+            <li>Weekly Briefings</li>
           </ul>
+          <button class="magnetic-btn" style="width: 100%;">Apply Now</button>
         </div>
-        <div class="tier reveal delay-2" role="listitem">
-          <div class="tier-badge featured">LEVEL 02</div>
+        <div class="tier-card featured reveal delay-2">
+          <div class="tier-badge">MOST POPULAR</div>
           <h3 class="tier-name">Architect</h3>
-          <p class="tier-desc body-md">Advanced deployment. Direct access. Real-time optimization.</p>
-          <ul class="tier-specs" aria-label="Architect features">
-            <li><span>Core Systems</span> <span>✓</span></li>
-            <li><span>Logic Framework</span> <span>✓</span></li>
-            <li><span>Community Access</span> <span>✓</span></li>
-            <li><span>Mentorship</span> <span>✓</span></li>
-            <li><span>Asset Protocols</span> <span>✓</span></li>
+          <div class="tier-price">$1,497<span>/one-time</span></div>
+          <ul class="tier-features">
+            <li>Everything in Foundation</li>
+            <li>Live Deployment Sessions</li>
+            <li>Direct Mentor Access</li>
+            <li>Advanced Asset Protocols</li>
+            <li>Priority Support</li>
           </ul>
+          <button class="magnetic-btn primary" style="width: 100%;">Join Waitlist</button>
         </div>
-        <div class="tier reveal delay-3" role="listitem">
-          <div class="tier-badge">LEVEL 03</div>
-          <h3 class="tier-name">Sovereign</h3>
-          <p class="tier-desc body-md">Complete blueprint. Generational systems. Legacy architecture.</p>
-          <ul class="tier-specs" aria-label="Sovereign features">
-            <li><span>Everything</span> <span>✓</span></li>
-            <li><span>Legacy Planning</span> <span>✓</span></li>
-            <li><span>Direct Line</span> <span>✓</span></li>
-            <li><span>Custom Systems</span> <span>✓</span></li>
-            <li><span>Lifetime Access</span> <span>✓</span></li>
+        <div class="tier-card reveal delay-3">
+          <div class="tier-badge">SOVEREIGN</div>
+          <h3 class="tier-name">Legacy</h3>
+          <div class="tier-price">Application<span> Only</span></div>
+          <ul class="tier-features">
+            <li>Full System Blueprint</li>
+            <li>1-on-1 Architecture Calls</li>
+            <li>Generational Planning</li>
+            <li>Custom Infrastructure</li>
+            <li>Lifetime Access</li>
           </ul>
+          <button class="magnetic-btn" style="width: 100%;">Request Access</button>
         </div>
       </div>
     </section>
 
-    <section class="footer-cta reveal" aria-labelledby="cta-heading">
-      <h2 class="display heading-lg" id="cta-heading">Ready to<br>Build?</h2>
-      <p class="body-lg">The empire doesn't build itself. But we'll give you the blueprint.</p>
-      <div class="cta-group" style="justify-content: center;">
-        <a href="https://instagram.com/empire.born" class="btn btn-primary" onclick="openInstagram(event)" target="_blank" rel="noopener noreferrer">Enter @empire.born</a>
-      </div>
-      <div style="margin-top: 5rem;">
-        <div class="mono">System Status: <span style="color: var(--accent);" role="status" aria-live="polite">Online</span></div>
+    <!-- FAQ -->
+    <section class="reveal">
+      <div class="section-label">Frequently Asked</div>
+      <div class="faq-list">
+        <div class="faq-item reveal delay-1">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Is this for beginners or experienced traders?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+          <div class="faq-answer">Both. The framework scales with your experience. Beginners get structured foundations, while veterans receive advanced optimization modules.</div>
+        </div>
+        <div class="faq-item reveal delay-2">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>How long until I see results?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+          <div class="faq-answer">Most architects report structural improvements within 30 days. Compound effects typically accelerate between months 3-6.</div>
+        </div>
+        <div class="faq-item reveal delay-3">
+          <div class="faq-question" onclick="toggleFaq(this)">
+            <span>Can I get a refund?</span>
+            <svg class="faq-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          </div>
+          <div class="faq-answer">We operate on a performance-backed guarantee. If you implement the system correctly and don't see measurable improvement, we'll refund your investment.</div>
+        </div>
       </div>
     </section>
-  </div>
+
+    <!-- Final CTA -->
+    <section class="cta-final reveal">
+      <h2 class="display heading-lg">Ready to<br>Build?</h2>
+      <p class="body-lg">The empire doesn't build itself. But we'll give you the blueprint.</p>
+      <button class="glow-btn" onclick="openInstagram(event)">Enter @empire.born</button>
+      <div style="margin-top: 4rem;">
+        <div class="mono">System Status: <span style="color: var(--accent);">Online</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="mono">© 2026 empire.born — All rights reserved.</div>
+    <div class="footer-links">
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+      <a href="#">Contact</a>
+    </div>
+  </footer>
 
   <script>
     // ===== INSTAGRAM DEEP LINK =====
@@ -420,20 +506,7 @@
       } else { window.open(url, '_blank'); }
     }
 
-    // ===== LOADER =====
-    let loadProgress = 0;
-    const loaderFill = document.getElementById('loaderFill');
-    const loader = document.getElementById('loader');
-    const loadInterval = setInterval(() => {
-      loadProgress += Math.random() * 12 + 4;
-      if (loadProgress >= 100) {
-        loadProgress = 100; clearInterval(loadInterval);
-        setTimeout(() => { loader.classList.add('hide'); loader.setAttribute('aria-busy', 'false'); }, 400);
-      }
-      loaderFill.style.width = loadProgress + '%';
-    }, 80);
-
-    // ===== SCROLL & PROGRESS =====
+    // ===== SCROLL PROGRESS & NAV =====
     let ticking = false;
     function updateScroll() {
       const scroll = window.scrollY;
@@ -441,7 +514,11 @@
       const p = Math.min(scroll / maxScroll, 1);
       document.getElementById('progress').style.transform = `scaleX(${p})`;
       document.getElementById('progress').setAttribute('aria-valuenow', Math.round(p * 100));
-      morphTarget = p;
+      
+      const nav = document.getElementById('nav');
+      if (scroll > 50) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+      
       ticking = false;
     }
     window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(updateScroll); ticking = true; } }, { passive: true });
@@ -454,329 +531,218 @@
     }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-    updateScroll();
+    // ===== ANIMATED COUNTERS =====
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseFloat(el.dataset.target);
+          const suffix = el.dataset.suffix || '';
+          const duration = 2000;
+          const start = performance.now();
+          
+          function update(now) {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const current = target * ease;
+            
+            if (target % 1 !== 0) el.textContent = current.toFixed(2) + suffix;
+            else el.textContent = Math.floor(current) + suffix;
+            
+            if (progress < 1) requestAnimationFrame(update);
+          }
+          requestAnimationFrame(update);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.stat-value').forEach(el => counterObserver.observe(el));
 
-    // ===== PARTICLE GLOBE → DOLLAR BILLS MORPH =====
+    // ===== 3D TILT CARDS =====
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * -8;
+        const rotateY = ((x - centerX) / centerX) * 8;
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale(1)';
+      });
+    });
+
+    // ===== MAGNETIC BUTTONS =====
+    document.querySelectorAll('.magnetic-btn, .glow-btn').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+      });
+    });
+
+    // ===== FAQ ACCORDION =====
+    function toggleFaq(question) {
+      const item = question.parentElement;
+      const isActive = item.classList.contains('active');
+      document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('active'));
+      if (!isActive) item.classList.add('active');
+    }
+
+    // ===== PARTICLE GLOBE → BILLS MORPH =====
     const canvas = document.getElementById('particleCanvas');
     const ctx = canvas.getContext('2d');
     let width, height, centerX, centerY;
-    let morphTarget = 0;
-    let morphCurrent = 0;
+    let morphTarget = 0, morphCurrent = 0;
     let mouseX = -9999, mouseY = -9999;
-    let isMouseOnCanvas = false;
 
-    // Particle configuration
-    const PARTICLE_COUNT = 2800;
-    const GLOBE_RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.18;
-    const REPULSION_RADIUS = 150;
-    const REPULSION_FORCE = 8;
-    const RETURN_FORCE = 0.03;
-    const DAMPING = 0.92;
+    const PARTICLE_COUNT = 2400;
+    const GLOBE_RADIUS = Math.min(window.innerWidth, window.innerHeight) * 0.16;
+    const REPULSION_RADIUS = 140;
+    const REPULSION_FORCE = 7;
+    const RETURN_FORCE = 0.035;
+    const DAMPING = 0.91;
 
-    // Colors
-    const GLOBE_COLORS = [
-      { r: 0, g: 255, b: 102 },    // accent green
-      { r: 0, g: 204, b: 82 },     // darker green
-      { r: 212, g: 175, b: 55 },   // gold
-      { r: 252, g: 246, b: 186 },  // light gold
-      { r: 170, g: 119, b: 28 },   // dark gold
-    ];
+    const GLOBE_COLORS = [{r:0,g:255,b:102},{r:0,g:204,b:82},{r:212,g:175,b:55},{r:252,g:246,b:186},{r:170,g:119,b:28}];
+    const BILL_COLORS = [{r:26,g:77,b:46},{r:45,g:90,b:61},{r:212,g:175,b:55},{r:252,g:246,b:186},{r:191,g:149,b:63}];
 
-    const BILL_COLORS = [
-      { r: 26, g: 77, b: 46 },     // dollar green
-      { r: 45, g: 90, b: 61 },     // lighter green
-      { r: 212, g: 175, b: 55 },   // gold accents
-      { r: 252, g: 246, b: 186 },  // gold highlights
-      { r: 191, g: 149, b: 63 },   // bronze gold
-    ];
-
-    // Resize handler
     function resize() {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      centerX = width / 2;
-      centerY = height / 2;
+      centerX = width / 2; centerY = height / 2;
     }
     resize();
     window.addEventListener('resize', () => { resize(); initParticles(); });
 
-    // Particle class
     class Particle {
       constructor(i, total) {
-        this.i = i;
-        this.total = total;
+        this.i = i; this.total = total;
         this.x = 0; this.y = 0; this.z = 0;
-        this.targetX = 0; this.targetY = 0; this.targetZ = 0;
         this.vx = 0; this.vy = 0; this.vz = 0;
-        this.size = 0;
-        this.color = null;
+        this.size = 0; this.color = null;
         this.colorIndex = Math.floor(Math.random() * GLOBE_COLORS.length);
-        this.phase = Math.random() * Math.PI * 2;
-        this.initGlobe();
+        this.initGlobe(); this.initBill();
       }
-
       initGlobe() {
-        // Fibonacci sphere distribution
         const phi = Math.acos(1 - 2 * (this.i + 0.5) / this.total);
         const theta = Math.PI * (1 + Math.sqrt(5)) * (this.i + 0.5);
         const jitter = 0.85 + Math.random() * 0.3;
-        
         this.globeX = GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta) * jitter;
         this.globeY = GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta) * jitter;
         this.globeZ = GLOBE_RADIUS * Math.cos(phi) * jitter;
-        
         this.x = this.globeX; this.y = this.globeY; this.z = this.globeZ;
-        this.targetX = this.globeX; this.targetY = this.globeY; this.targetZ = this.globeZ;
         this.size = 1.5 + Math.random() * 2;
         this.color = GLOBE_COLORS[this.colorIndex];
       }
-
       initBill() {
-        // Create a stacked bill shape - multiple layers
-        const billW = Math.min(380, width * 0.35);
-        const billH = Math.min(160, width * 0.12);
-        const layers = 6;
-        const layerZ = 18;
-        const spreadX = billW / 2;
-        const spreadY = billH / 2;
-        
-        // Determine which layer this particle belongs to
+        const billW = Math.min(360, width * 0.32);
+        const billH = Math.min(150, width * 0.11);
+        const layers = 6; const layerZ = 16;
         const layerIndex = Math.floor((this.i / this.total) * layers) % layers;
-        const faceType = Math.floor(Math.random() * 6); // 6 faces of a box
-        
+        const faceType = Math.floor(Math.random() * 6);
         let fx, fy, fz;
-        
         switch(faceType) {
-          case 0: // Front face
-            fx = (Math.random() - 0.5) * billW;
-            fy = (Math.random() - 0.5) * billH;
-            fz = layerIndex * layerZ - (layers * layerZ) / 2;
-            break;
-          case 1: // Back face
-            fx = (Math.random() - 0.5) * billW;
-            fy = (Math.random() - 0.5) * billH;
-            fz = layerIndex * layerZ - (layers * layerZ) / 2 + layerZ;
-            break;
-          case 2: // Top face
-            fx = (Math.random() - 0.5) * billW;
-            fy = layerIndex * layerZ / 2;
-            fz = (Math.random() - 0.5) * billH;
-            break;
-          case 3: // Bottom face
-            fx = (Math.random() - 0.5) * billW;
-            fy = -layerIndex * layerZ / 2;
-            fz = (Math.random() - 0.5) * billH;
-            break;
-          case 4: // Left edge (stacked look)
-            fx = -billW / 2;
-            fy = (Math.random() - 0.5) * billH;
-            fz = layerIndex * layerZ - (layers * layerZ) / 2 + Math.random() * layerZ;
-            break;
-          case 5: // Right edge
-            fx = billW / 2;
-            fy = (Math.random() - 0.5) * billH;
-            fz = layerIndex * layerZ - (layers * layerZ) / 2 + Math.random() * layerZ;
-            break;
+          case 0: fx=(Math.random()-0.5)*billW; fy=(Math.random()-0.5)*billH; fz=layerIndex*layerZ-(layers*layerZ)/2; break;
+          case 1: fx=(Math.random()-0.5)*billW; fy=(Math.random()-0.5)*billH; fz=layerIndex*layerZ-(layers*layerZ)/2+layerZ; break;
+          case 2: fx=(Math.random()-0.5)*billW; fy=layerIndex*layerZ/2; fz=(Math.random()-0.5)*billH; break;
+          case 3: fx=(Math.random()-0.5)*billW; fy=-layerIndex*layerZ/2; fz=(Math.random()-0.5)*billH; break;
+          case 4: fx=-billW/2; fy=(Math.random()-0.5)*billH; fz=layerIndex*layerZ-(layers*layerZ)/2+Math.random()*layerZ; break;
+          case 5: fx=billW/2; fy=(Math.random()-0.5)*billH; fz=layerIndex*layerZ-(layers*layerZ)/2+Math.random()*layerZ; break;
         }
-        
-        // Add some jitter for organic feel
-        const jitter = 3;
-        this.billX = fx + (Math.random() - 0.5) * jitter;
-        this.billY = fy + (Math.random() - 0.5) * jitter;
-        this.billZ = fz + (Math.random() - 0.5) * jitter;
-        
+        this.billX = fx + (Math.random()-0.5)*3;
+        this.billY = fy + (Math.random()-0.5)*3;
+        this.billZ = fz + (Math.random()-0.5)*3;
         this.size = 2 + Math.random() * 2.5;
         this.color = BILL_COLORS[Math.floor(Math.random() * BILL_COLORS.length)];
       }
-
       update(time) {
-        // Morph target
         const morphT = morphCurrent;
-        
-        // Interpolate target position
         this.targetX = this.globeX * (1 - morphT) + this.billX * morphT;
         this.targetY = this.globeY * (1 - morphT) + this.billY * morphT;
         this.targetZ = this.globeZ * (1 - morphT) + this.billZ * morphT;
         
-        // Interpolate color
         const gc = GLOBE_COLORS[this.colorIndex];
         const bc = BILL_COLORS[this.colorIndex];
-        this.color = {
-          r: gc.r * (1 - morphT) + bc.r * morphT,
-          g: gc.g * (1 - morphT) + bc.g * morphT,
-          b: gc.b * (1 - morphT) + bc.b * morphT
-        };
+        this.color = { r: gc.r*(1-morphT)+bc.r*morphT, g: gc.g*(1-morphT)+bc.g*morphT, b: gc.b*(1-morphT)+bc.b*morphT };
 
-        // Cursor repulsion (only in 2D screen space)
-        if (isMouseOnCanvas) {
+        if (mouseX > -9000) {
           const screenX = centerX + this.targetX;
           const screenY = centerY + this.targetY;
-          const dx = screenX - mouseX;
-          const dy = screenY - mouseY;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          
+          const dx = screenX - mouseX; const dy = screenY - mouseY;
+          const dist = Math.sqrt(dx*dx + dy*dy);
           if (dist < REPULSION_RADIUS && dist > 0) {
-            const force = (1 - dist / REPULSION_RADIUS) * REPULSION_FORCE;
-            this.vx += (dx / dist) * force;
-            this.vy += (dy / dist) * force;
+            const force = (1 - dist/REPULSION_RADIUS) * REPULSION_FORCE;
+            this.vx += (dx/dist)*force; this.vy += (dy/dist)*force;
           }
         }
 
-        // Spring physics toward target
         this.vx += (this.targetX - this.x) * RETURN_FORCE;
         this.vy += (this.targetY - this.y) * RETURN_FORCE;
         this.vz += (this.targetZ - this.z) * RETURN_FORCE * 0.5;
-        
-        // Damping
-        this.vx *= DAMPING;
-        this.vy *= DAMPING;
-        this.vz *= DAMPING;
-        
-        // Update position
-        this.x += this.vx;
-        this.y += this.vy;
-        this.z += this.vz;
+        this.vx *= DAMPING; this.vy *= DAMPING; this.vz *= DAMPING;
+        this.x += this.vx; this.y += this.vy; this.z += this.vz;
       }
-
       draw(time) {
-        const screenX = centerX + this.x;
-        const screenY = centerY + this.y;
-        
-        // Perspective projection for depth
         const perspective = 800;
         const scale = perspective / (perspective + this.z);
-        const projectedX = centerX + this.x * scale;
-        const projectedY = centerY + this.y * scale;
-        const projectedSize = this.size * scale;
+        const px = centerX + this.x * scale;
+        const py = centerY + this.y * scale;
+        const ps = this.size * scale;
         const alpha = Math.max(0.2, Math.min(1, 0.5 + scale * 0.5));
+        const {r,g,b} = this.color;
         
-        // Glow effect
-        const { r, g, b } = this.color;
-        
-        ctx.beginPath();
-        ctx.arc(projectedX, projectedY, projectedSize, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha})`;
-        ctx.fill();
-        
-        // Subtle glow
-        if (projectedSize > 2.5) {
-          ctx.beginPath();
-          ctx.arc(projectedX, projectedY, projectedSize * 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${alpha * 0.15})`;
-          ctx.fill();
+        ctx.beginPath(); ctx.arc(px, py, ps, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${alpha})`; ctx.fill();
+        if (ps > 2.5) {
+          ctx.beginPath(); ctx.arc(px, py, ps*2.5, 0, Math.PI*2);
+          ctx.fillStyle = `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${alpha*0.15})`; ctx.fill();
         }
       }
     }
 
-    // Initialize particles
     let particles = [];
-    function initParticles() {
-      particles = [];
-      const r = Math.min(width, height) * 0.18;
-      for (let i = 0; i < PARTICLE_COUNT; i++) {
-        particles.push(new Particle(i, PARTICLE_COUNT));
-      }
-    }
+    function initParticles() { particles = []; for(let i=0; i<PARTICLE_COUNT; i++) particles.push(new Particle(i, PARTICLE_COUNT)); }
     initParticles();
 
-    // Mouse tracking
-    canvas.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      isMouseOnCanvas = true;
-      
-      // Update CSS variable for background atmosphere
-      document.body.style.setProperty('--mx', (mouseX / width).toFixed(3));
-      document.body.style.setProperty('--my', (mouseY / height).toFixed(3));
-    });
-    
-    canvas.addEventListener('mouseleave', () => {
-      isMouseOnCanvas = false;
-      mouseX = -9999;
-      mouseY = -9999;
-    });
-    
-    canvas.addEventListener('touchmove', (e) => {
-      mouseX = e.touches[0].clientX;
-      mouseY = e.touches[0].clientY;
-      isMouseOnCanvas = true;
-    }, { passive: true });
-    
-    canvas.addEventListener('touchend', () => {
-      isMouseOnCanvas = false;
-    });
+    document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+    document.addEventListener('touchmove', e => { mouseX = e.touches[0].clientX; mouseY = e.touches[0].clientY; }, {passive: true});
 
-    // Animation loop
     let time = 0;
     function animate() {
       time += 0.01;
-      
-      // Smooth morph transition
       morphCurrent += (morphTarget - morphCurrent) * 0.04;
       
-      // Update morph indicator
-      const morphBar = document.getElementById('morphBarFill');
-      const morphIndicator = document.getElementById('morphIndicator');
-      if (morphBar) morphBar.style.width = (morphCurrent * 100) + '%';
-      if (morphIndicator) {
-        if (morphCurrent > 0.8) morphIndicator.classList.add('hidden');
-        else if (morphCurrent < 0.2) morphIndicator.classList.add('hidden');
-        else morphIndicator.classList.remove('hidden');
-      }
-      
-      // Clear canvas
       ctx.clearRect(0, 0, width, height);
       
-      // Draw connection lines between close particles (only when globe)
       if (morphCurrent < 0.3) {
-        const lineAlpha = (1 - morphCurrent / 0.3) * 0.08;
-        ctx.strokeStyle = `rgba(0, 255, 102, ${lineAlpha})`;
-        ctx.lineWidth = 0.5;
-        
-        // Sample every N particles for performance
-        const step = 8;
-        const maxDist = 60;
-        for (let i = 0; i < particles.length; i += step) {
-          const p1 = particles[i];
-          const sx1 = centerX + p1.x;
-          const sy1 = centerY + p1.y;
-          
-          for (let j = i + step; j < particles.length; j += step) {
+        const lineAlpha = (1 - morphCurrent/0.3) * 0.06;
+        ctx.strokeStyle = `rgba(0,255,102,${lineAlpha})`; ctx.lineWidth = 0.5;
+        const step = 8; const maxDist = 55;
+        for(let i=0; i<particles.length; i+=step) {
+          const p1 = particles[i]; const sx1 = centerX + p1.x; const sy1 = centerY + p1.y;
+          for(let j=i+step; j<particles.length; j+=step) {
             const p2 = particles[j];
-            const dx = p1.x - p2.x;
-            const dy = p1.y - p2.y;
-            const dist = Math.sqrt(dx * dx + dy * dy);
-            
-            if (dist < maxDist) {
-              ctx.beginPath();
-              ctx.moveTo(sx1, sy1);
-              ctx.lineTo(centerX + p2.x, centerY + p2.y);
-              ctx.stroke();
-            }
+            const dx = p1.x-p2.x; const dy = p1.y-p2.y;
+            const dist = Math.sqrt(dx*dx+dy*dy);
+            if(dist < maxDist) { ctx.beginPath(); ctx.moveTo(sx1,sy1); ctx.lineTo(centerX+p2.x, centerY+p2.y); ctx.stroke(); }
           }
         }
       }
       
-      // Update and draw particles
-      for (const p of particles) {
-        p.update(time);
-        p.draw(time);
-      }
-      
-      // Draw cursor glow
-      if (isMouseOnCanvas) {
-        const gradient = ctx.createRadialGradient(mouseX, mouseY, 0, mouseX, mouseY, 200);
-        gradient.addColorStop(0, 'rgba(0, 255, 102, 0.08)');
-        gradient.addColorStop(0.5, 'rgba(0, 255, 102, 0.03)');
-        gradient.addColorStop(1, 'rgba(0, 255, 102, 0)');
-        ctx.fillStyle = gradient;
-        ctx.fillRect(mouseX - 200, mouseY - 200, 400, 400);
-      }
-      
+      for(const p of particles) { p.update(time); p.draw(time); }
       requestAnimationFrame(animate);
     }
-    
     animate();
+
+    updateScroll();
   </script>
 </body>
 </html>
