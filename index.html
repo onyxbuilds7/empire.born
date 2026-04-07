@@ -1,81 +1,140 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" as="style">
+<link rel="preload" href="https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800&auto=format&fit=crop" as="image" fetchpriority="low">
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#030303">
+  <meta name="description" content="empire.born — The Architecture of Wealth. Build systems of discipline for those who demand the highest standard.">
   <title>empire.born — The Architecture of Wealth</title>
+  
+  <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Syne:wght@400;600;800&family=Space+Mono&display=swap"
-    rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
   <style>
+    /* ===== CSS VARIABLES & BASE ===== */
     :root {
+      /* Colors */
       --bg: #030303;
+      --bg-elev: #0a0a0a;
       --text: #f0f0f0;
-      --dim: #555;
-      --glass: rgba(25, 25, 25, 0.6);
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --glass-glow: rgba(255, 255, 255, 0.05);
-      --pure: #fff;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      cursor: none;
-    }
-
-    ::selection {
-      background: #fff;
-      color: #000;
-    }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow-x: hidden;
-      min-height: 100vh;
-      /* The global 3D variables */
+      --text-dim: #888;
+      --text-muted: #555;
+      --accent: #00ff66;
+      --accent-glow: rgba(0, 255, 102, 0.15);
+      --gold-start: #BF953F;
+      --gold-mid: #FCF6BA;
+      --gold-end: #AA771C;
+      
+      /* Glass */
+      --glass: rgba(20, 20, 20, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-border-hover: rgba(255, 255, 255, 0.25);
+      --glass-glow: rgba(255, 255, 255, 0.03);
+      
+      /* 3D Core */
       --mx: 0.5;
       --my: 0.5;
       --scroll: 0;
+      --morph: 0;
+      --pulse: 0;
+      
+      /* Dimensions */
+      --w-start: 470px; --h-start: 200px; --d-start: 50px;
+      --w-end: 320px; --h-end: 140px; --d-end: 80px;
+      --cw: calc(var(--w-start) + (var(--w-end) - var(--w-start)) * var(--morph));
+      --ch: calc(var(--h-start) + (var(--h-end) - var(--h-start)) * var(--morph));
+      --cd: calc(var(--d-start) + (var(--d-end) - var(--d-start)) * var(--morph));
+      
+      /* Easing */
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Spacing */
+      --section-pad: clamp(2rem, 8vw, 5rem);
+      --container-pad: clamp(1.5rem, 5vw, 3rem);
     }
 
-    /* Custom Cinematic Cursor */
-    .cursor-dot,
-    .cursor-outline {
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    ::selection { background: var(--accent); color: #000; }
+    
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
+    
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      min-height: 100vh;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    /* ===== NOISE OVERLAY ===== */
+    body::before {
+      content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
+      inset: 0;
       z-index: 9999;
       pointer-events: none;
+      opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      animation: noiseShift 20s steps(1) infinite;
+    }
+    
+    @keyframes noiseShift {
+      0%, 100% { transform: translate(0, 0); }
+      10% { transform: translate(-1%, -1%); }
+      20% { transform: translate(1%, 1%); }
+      30% { transform: translate(-1%, 1%); }
+      40% { transform: translate(1%, -1%); }
+      50% { transform: translate(-1%, 0); }
+      60% { transform: translate(1%, 0); }
+      70% { transform: translate(0, -1%); }
+      80% { transform: translate(0, 1%); }
+      90% { transform: translate(-1%, 1%); }
     }
 
-    .cursor-dot {
-      width: 4px;
-      height: 4px;
-      background: #fff;
+    /* ===== TYPOGRAPHY ===== */
+    .display {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.9;
+    }
+    
+    .mono {
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.65rem, 2.5vw, 0.75rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    
+    h1, h2, h3 {
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
     }
 
-    .cursor-outline {
-      width: 40px;
-      height: 40px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: width 0.2s, height 0.2s, border-color 0.2s;
-    }
-
-    body:hover .cursor-outline {
-      border-color: #fff;
-      width: 50px;
-      height: 50px;
-    }
-
-    /* Loader */
+    /* ===== LOADER ===== */
     #loader {
       position: fixed;
       inset: 0;
@@ -84,115 +143,121 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: transform 1.2s cubic-bezier(0.8, 0, 0.1, 1);
+      transition: transform 1s var(--ease-out);
+      will-change: transform;
     }
-
+    
     #loader.hide {
       transform: translateY(-100%);
     }
-
+    
     .loader-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 2rem;
+      padding: 2rem;
+      text-align: center;
     }
-
+    
     .loader-text {
       font-family: 'Space Mono', monospace;
-      font-size: 2rem;
+      font-size: clamp(1.5rem, 5vw, 2rem);
       color: #fff;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       font-weight: 700;
     }
-
+    
     .loader-status {
       font-family: 'Space Mono', monospace;
-      font-size: 0.65rem;
-      color: #666;
-      letter-spacing: 0.4em;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      letter-spacing: 0.35em;
       text-transform: uppercase;
-      animation: pulse 1s infinite alternate;
+      animation: pulse 1.5s infinite alternate;
     }
-
+    
     .loader-bar {
-      width: 240px;
-      height: 1px;
-      background: #222;
-      position: relative;
+      width: clamp(200px, 60vw, 300px);
+      height: 2px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 1px;
       overflow: hidden;
+      position: relative;
     }
-
+    
     .loader-fill {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       height: 100%;
-      background: #fff;
+      background: linear-gradient(90deg, var(--accent), #fff);
       width: 0%;
-      transition: width 0.05s linear;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 20px var(--accent-glow);
     }
-
+    
     @keyframes pulse {
-      0% {
-        opacity: 0.5;
-      }
-
-      100% {
-        opacity: 1;
-      }
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
     }
 
-
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      z-index: 9999;
-      pointer-events: none;
-      opacity: 0.03;
-      background-image: url("https://pin.it/5i5nubza3");
-    }
-
-    .display {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      letter-spacing: -0.04em;
-    }
-
-    .mono {
-      font-family: 'Space Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--dim);
-    }
-
-    /* Nav */
+    /* ===== NAV ===== */
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      padding: 30px 5vw;
+      padding: clamp(1rem, 4vw, 2rem) var(--container-pad);
       display: flex;
       justify-content: space-between;
       align-items: center;
       z-index: 100;
       mix-blend-mode: difference;
+      pointer-events: none;
     }
-
+    
+    nav > * { pointer-events: auto; }
+    
     .logo {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
-      font-size: 1.2rem;
+      font-size: clamp(1rem, 3vw, 1.3rem);
       letter-spacing: -0.02em;
+      position: relative;
+    }
+    
+    .logo::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 100%; height: 1px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.4s var(--ease-out);
+    }
+    
+    .logo:hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
     }
 
-    /* 3D Container */
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      z-index: 1000;
+      transform-origin: left;
+      transition: transform 0.1s linear;
+      will-change: transform;
+    }
+
+    /* ===== 3D SCENE ===== */
     .scene {
       width: 100vw;
       height: 100vh;
-      perspective: 1000px;
+      perspective: 1400px;
       perspective-origin: calc(var(--mx) * 100%) calc(var(--my) * 100%);
       transform-style: preserve-3d;
       display: flex;
@@ -202,392 +267,657 @@
       inset: 0;
       pointer-events: none;
       z-index: 0;
+      will-change: transform;
     }
+    
+    /* Responsive 3D scaling */
+    @media (max-width: 1024px) { .scene { perspective: 1000px; } }
+    @media (max-width: 768px) { .scene { perspective: 800px; } }
+    @media (max-width: 480px) { .scene { perspective: 600px; } }
 
-    /* Core 3D Object - Cash Pack */
     .core {
       position: relative;
-      width: 470px;
-      height: 50px;
+      width: var(--cw);
+      height: var(--cd);
       transform-style: preserve-3d;
-      transform: rotateX(calc((var(--my) - 0.5) * -60deg + var(--scroll) * 1deg)) rotateY(calc((var(--mx) - 0.5) * 80deg + var(--scroll) * 0.5deg));
+      transform: rotateX(calc((var(--my) - 0.5) * -50deg + var(--scroll) * 0.08deg)) 
+                 rotateY(calc((var(--mx) - 0.5) * 70deg + var(--scroll) * 0.04deg));
       transition: transform 0.1s linear;
+      will-change: transform;
     }
 
     .plane {
       position: absolute;
-      /* Simulated paper edges of a strap of cash */
-      background: repeating-linear-gradient(to bottom, #d6e0ce 0px, #a2bca8 1.5px, #7a9477 3px);
-      border: 1px solid rgba(0, 50, 20, 0.8);
-      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);
+      transition: background 0.4s var(--ease-smooth);
+      overflow: hidden;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
-    /* Front and Back (Long thin edges) */
-    .plane:nth-child(1) {
-      width: 470px;
-      height: 50px;
-      transform: translateZ(100px);
+    /* ===== TEXTURES ===== */
+    .dollar-tex, .gold-tex {
+      position: absolute;
+      inset: 0;
+      transition: opacity 0.4s var(--ease-smooth);
     }
-
-    .plane:nth-child(2) {
-      width: 470px;
-      height: 50px;
-      transform: rotateY(180deg) translateZ(100px);
-    }
-
-    /* Left and Right (Short thin edges) */
-    .plane:nth-child(3) {
-      width: 200px;
-      height: 50px;
-      left: 50%;
-      margin-left: -100px;
-      transform: rotateY(90deg) translateZ(235px);
-    }
-
-    .plane:nth-child(4) {
-      width: 200px;
-      height: 50px;
-      left: 50%;
-      margin-left: -100px;
-      transform: rotateY(-90deg) translateZ(235px);
-    }
-
-    /* Top and Bottom (The Faces of the $100 Bills) */
-    .plane:nth-child(5) {
-      width: 470px;
-      height: 200px;
-      top: 50%;
-      margin-top: -100px;
-      transform: rotateX(90deg) translateZ(25px);
-      background-image: url('https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800');
+    
+    .dollar-tex {
+      background-image: url('https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800&auto=format&fit=crop');
       background-size: cover;
       background-position: center;
-      border: 1px solid #1a3c20;
+      opacity: calc(1 - var(--morph));
+      filter: saturate(0.9) contrast(1.05);
+    }
+    
+    .gold-tex {
+      background: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-mid) 25%, var(--gold-end) 50%, var(--gold-mid) 75%, var(--gold-start) 100%);
+      background-size: 300% 300%;
+      animation: goldShimmer 8s infinite ease-in-out;
+      opacity: var(--morph);
+      box-shadow: 
+        inset 0 0 30px rgba(0,0,0,0.4),
+        0 0 60px rgba(191, 149, 63, 0.2);
+    }
+    
+    @keyframes goldShimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    .plane:nth-child(6) {
-      width: 470px;
-      height: 200px;
-      top: 50%;
-      margin-top: -100px;
-      transform: rotateX(-90deg) translateZ(25px);
-      background-image: url('https://images.unsplash.com/photo-1580519542036-ed47f3ae3c31?q=80&w=800');
-      background-size: cover;
-      background-position: center;
-      border: 1px solid #1a3c20;
+    /* Edge textures with morph */
+    .edge-tex {
+      background: repeating-linear-gradient(
+        to bottom,
+        #d6e0ce 0px,
+        #a2bca8 1.5px,
+        #7a9477 3px
+      );
+      transition: filter 0.4s;
+    }
+    
+    .gold-edge-tex {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--gold-end), var(--gold-start));
+      opacity: var(--morph);
+      transition: opacity 0.4s;
     }
 
-    /* Core inner glow - Reduced to show texture clearly */
+    /* Plane positioning */
+    .plane:nth-child(1) { /* Front */
+      width: var(--cw); height: var(--cd);
+      transform: translateZ(calc(var(--ch) / 2));
+    }
+    .plane:nth-child(2) { /* Back */
+      width: var(--cw); height: var(--cd);
+      transform: rotateY(180deg) translateZ(calc(var(--ch) / 2));
+    }
+    .plane:nth-child(3) { /* Left */
+      width: var(--ch); height: var(--cd);
+      left: 50%; margin-left: calc(var(--ch) / -2);
+      transform: rotateY(90deg) translateZ(calc(var(--cw) / 2));
+    }
+    .plane:nth-child(4) { /* Right */
+      width: var(--ch); height: var(--cd);
+      left: 50%; margin-left: calc(var(--ch) / -2);
+      transform: rotateY(-90deg) translateZ(calc(var(--cw) / 2));
+    }
+    .plane:nth-child(5) { /* Top */
+      width: var(--cw); height: var(--ch);
+      top: 50%; margin-top: calc(var(--ch) / -2);
+      transform: rotateX(90deg) translateZ(calc(var(--cd) / 2));
+    }
+    .plane:nth-child(6) { /* Bottom */
+      width: var(--cw); height: var(--ch);
+      top: 50%; margin-top: calc(var(--ch) / -2);
+      transform: rotateX(-90deg) translateZ(calc(var(--cd) / 2));
+    }
+
+    /* Core glow */
     .core::after {
       content: '';
       position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 500px;
-      height: 250px;
-      background: #00ff66;
-      transform: translate(-50%, -50%) translateZ(-100px);
-      filter: blur(140px);
-      opacity: 0.15;
+      top: 50%; left: 50%;
+      width: clamp(300px, 60vw, 500px);
+      height: clamp(150px, 30vw, 250px);
+      background: var(--accent);
+      transform: translate(-50%, -50%) translateZ(-150px);
+      filter: blur(clamp(80px, 20vw, 140px));
+      opacity: calc(0.12 + var(--pulse) * 0.08);
       pointer-events: none;
+      animation: glowPulse 4s infinite ease-in-out;
+      will-change: opacity;
+    }
+    
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.12; }
+      50% { opacity: 0.2; }
     }
 
-    /* Content layers */
+    /* ===== CONTENT ===== */
     .content-wrapper {
       position: relative;
       z-index: 10;
     }
-
+    
     section {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 0 10vw;
+      padding: var(--section-pad) var(--container-pad);
       position: relative;
     }
-
+    
     .hero-content {
       mix-blend-mode: difference;
+      max-width: 900px;
     }
-
+    
     h1 {
-      font-size: clamp(4rem, 12vw, 12rem);
-      line-height: 0.85;
-      margin-bottom: 2rem;
-      text-transform: uppercase;
-      background: linear-gradient(to right, #fff, #555);
+      font-size: clamp(3rem, 14vw, 11rem);
+      margin: 1rem 0 2.5rem;
+      background: linear-gradient(135deg, #fff 0%, #aaa 50%, #fff 100%);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      color: transparent;
+      animation: textShine 8s linear infinite;
     }
-
+    
+    @keyframes textShine {
+      to { background-position: 200% center; }
+    }
+    
     .sub {
-      max-width: 400px;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #aaa;
-      margin-bottom: 4rem;
+      max-width: 420px;
+      font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+      line-height: 1.7;
+      color: var(--text-dim);
+      margin-bottom: 3rem;
     }
 
+    /* ===== PILLARS ===== */
     .pillars {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      margin-top: 10vh;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      margin-top: 6vh;
     }
-
+    
     .pillar-item {
-      padding: 40px 30px;
+      padding: clamp(1.5rem, 4vw, 2.5rem);
       border: 1px solid var(--glass-border);
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(20px);
-      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      background: var(--glass);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-radius: 4px;
+      transition: all 0.4s var(--ease-out);
       position: relative;
       overflow: hidden;
     }
-
+    
     .pillar-item::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #fff, transparent);
+      top: 0; left: 0;
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
       transform: translateX(-100%);
-      transition: 0.8s;
+      transition: transform 0.6s var(--ease-out);
     }
-
+    
     .pillar-item:hover {
-      transform: translateY(-10px);
-      border-color: rgba(255, 255, 255, 0.3);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      transform: translateY(-6px);
+      border-color: var(--glass-border-hover);
+      box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 40px var(--accent-glow);
     }
-
+    
     .pillar-item:hover::before {
       transform: translateX(100%);
     }
-
+    
     .p-title {
-      font-size: 1.8rem;
-      margin: 20px 0;
+      font-size: clamp(1.4rem, 4vw, 1.9rem);
+      margin: 1.2rem 0 0.8rem;
       color: #fff;
       font-family: 'Syne', sans-serif;
-      font-weight: 600;
+      font-weight: 700;
     }
-
+    
     .p-body {
-      font-size: 0.9rem;
-      line-height: 1.6;
-      color: #888;
+      font-size: clamp(0.85rem, 2.3vw, 0.95rem);
+      line-height: 1.7;
+      color: var(--text-dim);
     }
 
+    /* ===== MANIFESTO ===== */
     .manifesto {
       text-align: center;
-      max-width: 900px;
+      max-width: 850px;
       margin: 0 auto;
+      padding: 2rem 0;
     }
-
+    
     .manifesto h2 {
-      font-size: clamp(2.5rem, 4vw, 5rem);
-      line-height: 1.1;
-      margin-bottom: 30px;
+      font-size: clamp(2rem, 6vw, 4.5rem);
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
       color: #fff;
     }
 
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
+    /* ===== CTA BUTTON ===== */
+    .cta-btn {
+      padding: clamp(0.9rem, 3vw, 1.3rem) clamp(2rem, 6vw, 3rem);
+      background: #fff;
+      color: #000;
+      border: none;
+      border-radius: 2px;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s var(--ease-out);
+      margin-top: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, var(--accent), #fff);
+      opacity: 0;
+      transition: opacity 0.3s;
+      z-index: -1;
+    }
+    
+    .cta-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 40px rgba(0, 255, 102, 0.3);
+    }
+    
+    .cta-btn:hover::before {
+      opacity: 1;
+    }
+    
+    .cta-btn:active {
+      transform: translateY(0);
     }
 
-    ::-webkit-scrollbar-track {
-      background: var(--bg);
+    /* ===== SCROLL INDICATOR ===== */
+    .scroll-indicator {
+      position: fixed;
+      bottom: clamp(1rem, 4vw, 2rem);
+      right: clamp(1rem, 4vw, 2rem);
+      width: 40px; height: 40px;
+      border: 1px solid var(--glass-border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+    
+    .scroll-indicator.visible {
+      opacity: 1;
+      pointer-events: auto;
+      cursor: pointer;
+    }
+    
+    .scroll-indicator::after {
+      content: '';
+      width: 1px; height: 12px;
+      background: var(--text);
+      animation: scrollBounce 2s infinite;
+    }
+    
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(6px); opacity: 0.5; }
     }
 
+    /* ===== RESPONSIVE ADJUSTMENTS ===== */
+    @media (max-width: 768px) {
+      nav { padding: 1rem var(--container-pad); }
+      section { padding: var(--section-pad) var(--container-pad); }
+      .pillars { grid-template-columns: 1fr; }
+      .manifesto { padding: 1rem 0; }
+    }
+    
+    @media (max-width: 480px) {
+      :root {
+        --w-start: 320px; --h-start: 140px; --d-start: 40px;
+        --w-end: 240px; --h-end: 100px; --d-end: 60px;
+      }
+      h1 { font-size: clamp(2.5rem, 16vw, 5rem); }
+      .sub { font-size: 0.9rem; }
+      .pillar-item { padding: 1.5rem; }
+    }
+
+    /* ===== CUSTOM SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb {
-      background: #333;
+      background: linear-gradient(var(--bg), #333, var(--bg));
+      border-radius: 3px;
     }
+    ::-webkit-scrollbar-thumb:hover { background: #444; }
 
-    @media (max-width: 900px) {
-      .pillars {
-        grid-template-columns: 1fr;
+    /* ===== ACCESSIBILITY ===== */
+    @media (prefers-reduced-motion: no-preference) {
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out);
       }
-
-      h1 {
-        font-size: 4rem;
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
+    
+    /* Focus states */
+    a:focus, button:focus, .pillar-item:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    
+    /* Skip link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px; left: 0;
+      background: var(--accent);
+      color: #000;
+      padding: 0.5rem 1rem;
+      z-index: 10001;
+      transition: top 0.2s;
+    }
+    .skip-link:focus { top: 0; }
   </style>
 </head>
-
 <body>
+  <!-- Accessibility -->
+  <a href="#main" class="skip-link mono">Skip to content</a>
+  
+  <!-- Progress Bar -->
+  <div class="progress-bar" id="progress"></div>
+  
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator" id="scrollIndicator" aria-label="Scroll down"></div>
 
-  <!-- Custom Cursor -->
-  <div class="cursor-dot" id="cursor-dot"></div>
-  <div class="cursor-outline" id="cursor-outline"></div>
-
-  <!-- Boot Loader -->
-  <div id="loader">
+  <!-- Loader -->
+  <div id="loader" role="status" aria-live="polite">
     <div class="loader-box">
-      <div class="loader-status" id="loader-status">INITIALIZING SYSTEM</div>
+      <div class="loader-status" id="loader-status">INITIALIZING</div>
       <div class="loader-bar">
         <div class="loader-fill" id="loader-fill"></div>
       </div>
-      <div class="loader-text" id="loader-perc">000</div>
+      <div class="loader-text mono" id="loader-perc">000</div>
     </div>
   </div>
 
+  <!-- Navigation -->
   <nav>
     <div class="logo">EMPIRE.BORN</div>
     <div class="mono">ARCHITECTURE</div>
   </nav>
 
-  <!-- Procedural 3D Background -->
-  <div class="scene">
+  <!-- 3D Scene -->
+  <div class="scene" aria-hidden="true">
     <div class="core">
-      <div class="plane"></div>
-      <div class="plane"></div>
-      <div class="plane"></div>
-      <div class="plane"></div>
-      <div class="plane"></div>
-      <div class="plane"></div>
+      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
+      <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
+      <div class="plane">
+        <div class="dollar-tex"></div>
+        <div class="gold-tex"></div>
+      </div>
+      <div class="plane">
+        <div class="dollar-tex"></div>
+        <div class="gold-tex"></div>
+      </div>
     </div>
   </div>
 
-  <div class="content-wrapper">
-    <section class="hero-content">
-      <div class="mono" style="margin-bottom: 2rem;">Initiate System</div>
+  <!-- Main Content -->
+  <div class="content-wrapper" id="main">
+    <!-- Hero -->
+    <section class="hero-content reveal">
+      <div class="mono" style="margin-bottom: 1.5rem;">Initiate System</div>
       <h1 class="display">Elite<br>Paradigm.</h1>
-      <p class="sub">Zero images. Zero gold. Pure, unapologetic spatial architecture. We build systems of discipline for
-        those who demand the highest standard.</p>
+      <p class="sub">Zero images. Zero gold. Pure, unapologetic spatial architecture. We build systems of discipline for those who demand the highest standard.</p>
     </section>
 
-    <section>
-      <div class="mono" style="margin-bottom: 2rem;">The Framework</div>
+    <!-- Framework -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.5rem;">The Framework</div>
       <div class="pillars">
-        <div class="pillar-item">
+        <article class="pillar-item">
           <div class="mono">01 // Logic</div>
-          <div class="p-title">Cold Calculation</div>
-          <div class="p-body">Emotion is a liability. Architecture demands pure, cold precision. We teach the algorithms
-            of absolute control.</div>
-        </div>
-        <div class="pillar-item">
+          <h3 class="p-title">Cold Calculation</h3>
+          <p class="p-body">Emotion is a liability. Architecture demands pure, cold precision. We teach the algorithms of absolute control.</p>
+        </article>
+        <article class="pillar-item">
           <div class="mono">02 // Force</div>
-          <div class="p-title">Kinetic Discipline</div>
-          <div class="p-body">Momentum generated through relentless, unyielding action. A framework forged in pressure
-            and perfected in silence.</div>
-        </div>
-        <div class="pillar-item">
+          <h3 class="p-title">Kinetic Discipline</h3>
+          <p class="p-body">Momentum generated through relentless, unyielding action. A framework forged in pressure and perfected in silence.</p>
+        </article>
+        <article class="pillar-item">
           <div class="mono">03 // Time</div>
-          <div class="p-title">Infinite Horizon</div>
-          <div class="p-body">We do not build for tomorrow. We construct titanium structures designed to outlast
-            biological limitations.</div>
-        </div>
+          <h3 class="p-title">Infinite Horizon</h3>
+          <p class="p-body">We do not build for tomorrow. We construct titanium structures designed to outlast biological limitations.</p>
+        </article>
       </div>
     </section>
 
-    <section class="manifesto">
-      <h2 class="display">"Perfection is achieved not when there is nothing more to add, but when there is nothing left
-        to take away."</h2>
+    <!-- Manifesto 1 -->
+    <section class="manifesto reveal">
+      <h2 class="display">"Perfection is achieved not when there is nothing more to add, but when there is nothing left to take away."</h2>
       <div class="mono">Join the absolute standard.</div>
+    </section>
+
+    <!-- The Mint -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.5rem;">04 // The Mint</div>
+      <div class="hero-content">
+        <h2 class="display" style="font-size: clamp(2.5rem, 9vw, 5rem);">Forged in<br>Silence.</h2>
+        <p class="sub">The transition from currency to asset is where true wealth begins. We don't just hold value; we create the structures that enforce it.</p>
+      </div>
+    </section>
+
+    <!-- Reserve -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.5rem;">05 // Reserve</div>
+      <div class="pillars">
+        <article class="pillar-item">
+          <div class="mono">Asset</div>
+          <h3 class="p-title">Hardened Logic</h3>
+          <p class="p-body">The gold standard isn't just a metal. It's a mindset of immutable, unchanging discipline in a world of inflation.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Protocol -->
+    <section style="text-align: right; align-items: flex-end;" class="reveal">
+      <div class="mono" style="margin-bottom: 1.5rem;">06 // Protocol</div>
+      <h2 class="display" style="font-size: clamp(2.5rem, 9vw, 5rem);">The Gold<br>Standard.</h2>
+      <p class="sub">Finalizing the transformation. From the paper promise to the physical reality of sovereign wealth.</p>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="manifesto reveal">
+      <div class="mono">System Completion</div>
+      <h2 class="display">"True power is the ability to maintain the standard regardless of the environment."</h2>
+      <button class="cta-btn" id="enterBtn">Enter The Empire</button>
     </section>
   </div>
 
-  <!-- JS Scripts for Spatial UI and UX Animations -->
+  <!-- Scripts -->
   <script>
-    // Boot Sequence
-    let perc = 0;
-    const loaderPerc = document.getElementById('loader-perc');
-    const loaderFill = document.getElementById('loader-fill');
-    const loaderStatus = document.getElementById('loader-status');
-    const loader = document.getElementById('loader');
+    // ===== UTILITIES =====
+    const lerp = (start, end, factor) => start + (end - start) * factor;
+    const clamp = (val, min, max) => Math.min(Math.max(val, min), max);
+    
+    // ===== LOADER =====
+    document.addEventListener('DOMContentLoaded', () => {
+      const loaderPerc = document.getElementById('loader-perc');
+      const loaderFill = document.getElementById('loader-fill');
+      const loaderStatus = document.getElementById('loader-status');
+      const loader = document.getElementById('loader');
+      
+      const statuses = ["SECURING ASSETS", "UPLOADING CAPITAL", "RENDERING WEALTH", "SYSTEM ONLINE"];
+      let perc = 0;
+      
+      const bootInterval = setInterval(() => {
+        perc = Math.min(perc + Math.random() * 5 + 2, 100);
+        const displayPerc = Math.floor(perc);
+        
+        loaderPerc.textContent = displayPerc.toString().padStart(3, '0');
+        loaderFill.style.width = `${displayPerc}%`;
+        
+        if (perc < 30) loaderStatus.textContent = statuses[0];
+        else if (perc < 65) loaderStatus.textContent = statuses[1];
+        else if (perc < 95) loaderStatus.textContent = statuses[2];
+        else loaderStatus.textContent = statuses[3];
+        
+        if (perc >= 100) {
+          clearInterval(bootInterval);
+          setTimeout(() => {
+            loader.classList.add('hide');
+            // Trigger initial reveal animations after loader
+            setTimeout(initRevealObservers, 300);
+          }, 400);
+        }
+      }, 40);
+    });
 
-    const statuses = [
-      "SECURING ASSETS",
-      "UPLOADING CAPITAL",
-      "RENDERING WEALTH",
-      "SYSTEM ONLINE"
-    ];
-
-    let bootInterval = setInterval(() => {
-      // Non-linear booting
-      perc += Math.floor(Math.random() * 6) + 1;
-      if (perc > 100) perc = 100;
-
-      // Update UI
-      loaderPerc.innerText = perc.toString().padStart(3, '0');
-      loaderFill.style.width = `${perc}%`;
-
-      // Update Status Text based on %
-      if (perc < 30) loaderStatus.innerText = statuses[0];
-      else if (perc < 65) loaderStatus.innerText = statuses[1];
-      else if (perc < 95) loaderStatus.innerText = statuses[2];
-      else loaderStatus.innerText = statuses[3];
-
-      if (perc === 100) {
-        clearInterval(bootInterval);
-        setTimeout(() => { loader.classList.add('hide'); }, 600); // slight pause before opening
-      }
-    }, 35);
-
-    // Custom Cursor Engine
-    const dot = document.getElementById('cursor-dot');
-    const outline = document.getElementById('cursor-outline');
-    let curX = window.innerWidth / 2;
-    let curY = window.innerHeight / 2;
-    let outX = curX;
-    let outY = curY;
-
-    // JS Spatial Engine & Cursor Coordinates
-    let mouseX = 0.5;
-    let mouseY = 0.5;
-    let targetX = 0.5;
-    let targetY = 0.5;
-
-    window.addEventListener('mousemove', (e) => {
-      // Global Tracking
-      targetX = e.clientX / window.innerWidth;
-      targetY = e.clientY / window.innerHeight;
-
-      // Cursor Pos Tracker
-      curX = e.clientX;
-      curY = e.clientY;
-      dot.style.transform = `translate(${curX}px, ${curY}px) translate(-50%, -50%)`;
-
-      // Interactive Hover check for Cursor expansion
-      const hovered = document.elementFromPoint(curX, curY);
-      if (hovered && (hovered.tagName === 'A' || hovered.closest('.pillar-item'))) {
-        outline.style.width = '60px'; outline.style.height = '60px';
-        outline.style.borderColor = '#fff';
+    // ===== SMOOTH SCROLL & PROGRESS =====
+    let lastScrollY = 0;
+    let ticking = false;
+    
+    function updateScroll() {
+      const scrollY = window.scrollY;
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = clamp(scrollY / maxScroll, 0, 1);
+      
+      // Update CSS variables
+      document.body.style.setProperty('--scroll', scrollY);
+      document.body.style.setProperty('--morph', progress);
+      document.body.style.setProperty('--pulse', Math.sin(progress * Math.PI));
+      
+      // Update progress bar
+      const progressEl = document.getElementById('progress');
+      progressEl.style.transform = `scaleX(${progress})`;
+      
+      // Show/hide scroll indicator
+      const indicator = document.getElementById('scrollIndicator');
+      if (scrollY < 200 && progress < 0.95) {
+        indicator.classList.add('visible');
       } else {
-        outline.style.width = '40px'; outline.style.height = '40px';
-        outline.style.borderColor = 'rgba(255,255,255,0.3)';
+        indicator.classList.remove('visible');
       }
-    });
-
+      
+      lastScrollY = scrollY;
+      ticking = false;
+    }
+    
     window.addEventListener('scroll', () => {
-      document.body.style.setProperty('--scroll', window.scrollY);
-    });
+      if (!ticking) {
+        requestAnimationFrame(updateScroll);
+        ticking = true;
+      }
+    }, { passive: true });
 
-    // Smooth animation loop for perspective and cursor trailing
-    function animate() {
-      // 3D Engine Lerp
-      mouseX += (targetX - mouseX) * 0.05;
-      mouseY += (targetY - mouseY) * 0.05;
+    // ===== 3D MOUSE TRACKING (Debounced) =====
+    let mouseX = 0.5, mouseY = 0.5;
+    let targetX = 0.5, targetY = 0.5;
+    let mouseTicking = false;
+    
+    function updateMouse() {
+      mouseX = lerp(mouseX, targetX, 0.08);
+      mouseY = lerp(mouseY, targetY, 0.08);
+      
       document.body.style.setProperty('--mx', mouseX.toFixed(3));
       document.body.style.setProperty('--my', mouseY.toFixed(3));
-
-      // Cursor Outline trailing Lerp
-      outX += (curX - outX) * 0.15;
-      outY += (curY - outY) * 0.15;
-      outline.style.transform = `translate(${outX}px, ${outY}px) translate(-50%, -50%)`;
-
-      requestAnimationFrame(animate);
+      
+      mouseTicking = true;
+      requestAnimationFrame(updateMouse);
     }
-    animate();
+    
+    // Start animation loop
+    requestAnimationFrame(updateMouse);
+    
+    // Mouse/touch move handler with throttling
+    function handlePointerMove(e) {
+      const x = e.clientX || (e.touches && e.touches[0].clientX) || window.innerWidth / 2;
+      const y = e.clientY || (e.touches && e.touches[0].clientY) || window.innerHeight / 2;
+      
+      targetX = clamp(x / window.innerWidth, 0, 1);
+      targetY = clamp(y / window.innerHeight, 0, 1);
+    }
+    
+    // Use passive listener for better scroll performance
+    window.addEventListener('mousemove', handlePointerMove, { passive: true });
+    window.addEventListener('touchmove', handlePointerMove, { passive: true });
+
+    // ===== REVEAL ON SCROLL =====
+    function initRevealObservers() {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+      
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    }
+
+    // ===== SCROLL INDICATOR CLICK =====
+    document.getElementById('scrollIndicator')?.addEventListener('click', () => {
+      window.scrollTo({ top: window.innerHeight * 0.9, behavior: 'smooth' });
+    });
+
+    // ===== CTA BUTTON =====
+    document.getElementById('enterBtn')?.addEventListener('click', function(e) {
+      // Add haptic feedback simulation
+      if (navigator.vibrate) navigator.vibrate(20);
+      
+      // Visual feedback
+      this.style.transform = 'scale(0.98)';
+      setTimeout(() => {
+        this.style.transform = '';
+        // Your action here: window.location.href = '/join';
+        alert('Welcome to the Empire. System access granted.');
+      }, 150);
+    });
+
+    // ===== RESIZE HANDLER (Debounced) =====
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        // Recalculate any layout-dependent values if needed
+        updateScroll();
+      }, 100);
+    }, { passive: true });
+
+    // ===== INITIALIZE =====
+    // Start scroll update immediately
+    updateScroll();
   </script>
 </body>
-
 </html>
