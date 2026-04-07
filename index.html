@@ -8,7 +8,7 @@
   
   <!-- Instagram & Social Meta Tags -->
   <meta property="og:title" content="empire.born — The Architecture of Wealth">
-  <meta property="og:description" content="Zero images. Zero gold. Pure spatial architecture. Systems of discipline for the elite.">
+  <meta property="og:description" content="Where currency transforms into legacy. Join the elite standard.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://empire.born">
   <meta property="og:image" content="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1200">
@@ -43,6 +43,7 @@
       --gold-mid: #FCF6BA;
       --gold-end: #AA771C;
       --dollar-green: #1a4d2e;
+      --dollar-dark: #0d1f17;
       
       /* Glass */
       --glass: rgba(20, 20, 20, 0.7);
@@ -70,7 +71,7 @@
       --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
       
       /* Spacing */
-      --section-pad: clamp(2rem, 6vw, 4rem);
+      --section-pad: clamp(3rem, 8vw, 6rem);
       --container-pad: clamp(1.5rem, 4vw, 3rem);
     }
 
@@ -111,7 +112,7 @@
       z-index: 9999;
       pointer-events: none;
       opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       animation: noiseShift 20s steps(1) infinite;
     }
     
@@ -128,7 +129,7 @@
       90% { transform: translate(-1%, 1%); }
     }
 
-    /* ===== TYPOGRAPHY - REDUCED SIZES ===== */
+    /* ===== TYPOGRAPHY ===== */
     .display {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
@@ -311,33 +312,34 @@
       -webkit-backface-visibility: hidden;
     }
 
-    /* ===== $100 BILL TEXTURE ===== */
+    /* ===== REALISTIC $100 BILL TEXTURE ===== */
     .dollar-tex {
       position: absolute;
       inset: 0;
       background: 
-        repeating-linear-gradient(
-          to bottom,
-          #2d5a3d 0px,
-          #1a4d2e 2px,
-          #2d5a3d 4px
-        );
+        linear-gradient(135deg, var(--dollar-dark) 0%, var(--dollar-green) 50%, var(--dollar-dark) 100%);
       opacity: calc(1 - var(--morph));
       transition: opacity 0.6s var(--ease-smooth);
+      overflow: hidden;
     }
     
-    /* Add bill details */
+    /* Bill border frame */
     .dollar-tex::before {
       content: '';
       position: absolute;
-      inset: 8px;
-      border: 2px solid rgba(255,255,255,0.15);
+      inset: 6px;
+      border: 3px solid rgba(191, 149, 63, 0.6);
       background: 
-        radial-gradient(ellipse at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 50%, rgba(255,255,255,0.1) 0%, transparent 50%);
+        repeating-linear-gradient(
+          to bottom,
+          transparent 0px,
+          rgba(26, 77, 46, 0.8) 1px,
+          transparent 2px
+        );
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     }
     
-    /* $100 watermark effect */
+    /* Gold accents and details */
     .dollar-tex::after {
       content: '100';
       position: absolute;
@@ -345,11 +347,29 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-family: 'Syne', sans-serif;
-      font-size: clamp(2rem, 8vw, 4rem);
+      font-size: clamp(2.5rem, 10vw, 5rem);
       font-weight: 800;
-      color: rgba(255,255,255,0.08);
-      letter-spacing: 0.1em;
+      background: linear-gradient(135deg, #BF953F, #FCF6BA, #AA771C);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.15em;
+      opacity: 0.9;
+      text-shadow: 0 0 40px rgba(191, 149, 63, 0.5);
     }
+    
+    /* Corner decorations */
+    .dollar-tex .corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(191, 149, 63, 0.7);
+    }
+    
+    .dollar-tex .corner-tl { top: 10px; left: 10px; border-right: 0; border-bottom: 0; }
+    .dollar-tex .corner-tr { top: 10px; right: 10px; border-left: 0; border-bottom: 0; }
+    .dollar-tex .corner-bl { bottom: 10px; left: 10px; border-right: 0; border-top: 0; }
+    .dollar-tex .corner-br { bottom: 10px; right: 10px; border-left: 0; border-top: 0; }
 
     /* ===== GOLD BAR TEXTURE ===== */
     .gold-tex {
@@ -372,7 +392,7 @@
         0 0 60px rgba(191, 149, 63, 0.25);
     }
     
-    /* Gold bar engraving effect */
+    /* Gold bar engraving */
     .gold-tex::before {
       content: '999.9 FINE GOLD';
       position: absolute;
@@ -539,7 +559,7 @@
     }
     
     .sub {
-      max-width: 400px;
+      max-width: 420px;
       font-size: clamp(0.85rem, 2.2vw, 1rem);
       line-height: 1.65;
       color: var(--text-dim);
@@ -830,11 +850,21 @@
       <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
       <div class="plane edge-tex"><div class="gold-edge-tex"></div></div>
       <div class="plane">
-        <div class="dollar-tex"></div>
+        <div class="dollar-tex">
+          <div class="corner corner-tl"></div>
+          <div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div>
+          <div class="corner corner-br"></div>
+        </div>
         <div class="gold-tex"></div>
       </div>
       <div class="plane">
-        <div class="dollar-tex"></div>
+        <div class="dollar-tex">
+          <div class="corner corner-tl"></div>
+          <div class="corner corner-tr"></div>
+          <div class="corner corner-bl"></div>
+          <div class="corner corner-br"></div>
+        </div>
         <div class="gold-tex"></div>
       </div>
     </div>
@@ -846,7 +876,7 @@
     <section class="hero-content reveal">
       <div class="mono" style="margin-bottom: 1.2rem;">Initiate System</div>
       <h1 class="display">Elite<br>Paradigm.</h1>
-      <p class="sub">Zero images. Zero gold. Pure, unapologetic spatial architecture. We build systems of discipline for those who demand the highest standard.</p>
+      <p class="sub">Where currency transforms into legacy. Pure spatial architecture for those who demand the highest standard of wealth creation.</p>
     </section>
 
     <!-- Framework -->
@@ -886,23 +916,68 @@
       </div>
     </section>
 
+    <!-- Vision -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.2rem;">05 // Vision</div>
+      <div class="hero-content">
+        <h2 class="display" style="font-size: clamp(2rem, 7vw, 4.5rem);">Beyond<br>Wealth.</h2>
+        <p class="sub">True empire is not measured in numbers, but in influence, legacy, and the systems that outlive their creators. We build dynasties, not portfolios.</p>
+      </div>
+    </section>
+
     <!-- Reserve -->
     <section class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">05 // Reserve</div>
+      <div class="mono" style="margin-bottom: 1.2rem;">06 // Reserve</div>
       <div class="pillars">
         <article class="pillar-item">
           <div class="mono">Asset</div>
           <h3 class="p-title">Hardened Logic</h3>
           <p class="p-body">The gold standard isn't just a metal. It's a mindset of immutable, unchanging discipline in a world of inflation.</p>
         </article>
+        <article class="pillar-item">
+          <div class="mono">Standard</div>
+          <h3 class="p-title">Sovereign Wealth</h3>
+          <p class="p-body">Physical assets in a digital world. Tangible power that cannot be deleted, frozen, or devalued by distant bureaucrats.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Legacy -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.2rem;">07 // Legacy</div>
+      <div class="hero-content">
+        <h2 class="display" style="font-size: clamp(2rem, 7vw, 4.5rem);">Built to<br>Outlast.</h2>
+        <p class="sub">Every empire leaves a mark. We engineer wealth structures that transcend generations, creating foundations for those who will carry the torch forward.</p>
       </div>
     </section>
 
     <!-- Protocol -->
     <section style="text-align: right; align-items: flex-end;" class="reveal">
-      <div class="mono" style="margin-bottom: 1.2rem;">06 // Protocol</div>
+      <div class="mono" style="margin-bottom: 1.2rem;">08 // Protocol</div>
       <h2 class="display" style="font-size: clamp(2rem, 7vw, 4rem);">The Gold<br>Standard.</h2>
       <p class="sub">Finalizing the transformation. From the paper promise to the physical reality of sovereign wealth.</p>
+    </section>
+
+    <!-- Membership -->
+    <section class="reveal">
+      <div class="mono" style="margin-bottom: 1.2rem; text-align: center;">Membership</div>
+      <div class="pillars" style="max-width: 900px; margin: 3vh auto 0;">
+        <article class="pillar-item" style="text-align: center;">
+          <div class="mono" style="font-size: 0.6rem;">Tier 01</div>
+          <h3 class="p-title">Initiate</h3>
+          <p class="p-body">Access to foundational systems and wealth architecture principles.</p>
+        </article>
+        <article class="pillar-item" style="text-align: center; border-color: var(--accent);">
+          <div class="mono" style="font-size: 0.6rem; color: var(--accent);">Tier 02</div>
+          <h3 class="p-title">Architect</h3>
+          <p class="p-body">Advanced frameworks, direct mentorship, and asset conversion strategies.</p>
+        </article>
+        <article class="pillar-item" style="text-align: center;">
+          <div class="mono" style="font-size: 0.6rem;">Tier 03</div>
+          <h3 class="p-title">Sovereign</h3>
+          <p class="p-body">Complete empire blueprint, legacy planning, and generational wealth structures.</p>
+        </article>
+      </div>
     </section>
 
     <!-- Final CTA -->
@@ -915,7 +990,7 @@
           <svg class="instagram-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
           </svg>
-          Follow @empire.born
+          Follow @empire.born on Instagram
         </a>
       </div>
     </section>
