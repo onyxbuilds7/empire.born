@@ -6,7 +6,15 @@
   <meta name="theme-color" content="#030303">
   <meta name="description" content="empire.born — The Architecture of Wealth. Build systems of discipline for those who demand the highest standard.">
   
-  <!-- Instagram & Social Meta Tags -->
+  <!-- Performance: Preconnect to external domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.coingecko.com">
+  
+  <!-- Performance: Preload critical fonts -->
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" as="style">
+  
+  <!-- Social Meta Tags -->
   <meta property="og:title" content="empire.born — The Architecture of Wealth">
   <meta property="og:description" content="Where currency transforms into legacy. Join the elite standard.">
   <meta property="og:type" content="website">
@@ -14,10 +22,15 @@
   <meta property="og:image" content="https://images.unsplash.com/photo-1611974765270-ca1258634369?q=80&w=1200">
   <meta name="twitter:card" content="summary_large_image">
   
+  <!-- PWA Support -->
+  <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiZW1waXJlLmJvcm4iLCJzaG9ydF9uYW1lIjoiZW1waXJlIiwiZGVzY3JpcHRpb24iOiJUaGUgQXJjaGl0ZWN0dXJlIG9mIFdlYWx0aCIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMDMwMzAzIiwidGhlbWVfY29sb3IiOiIjMDMwMzAzIn0=">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="empire.born">
+  
   <title>empire.born — The Architecture of Wealth</title>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
   
   <style>
@@ -49,25 +62,66 @@
 
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     
+    /* Accessibility: Respect reduced motion preferences */
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
       }
     }
     
-    html { scroll-behavior: smooth; }
+    html { 
+      scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+    }
     
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       line-height: 1.6;
       overflow-x: hidden;
       min-height: 100vh;
+      cursor: default;
     }
 
-    /* ===== NOISE ===== */
+    /* Accessibility: Skip link for keyboard users */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--accent);
+      color: var(--bg);
+      padding: 0.5rem 1rem;
+      z-index: 10001;
+      text-decoration: none;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      transition: top 0.2s;
+    }
+    
+    .skip-link:focus {
+      top: 0;
+      outline: 2px solid var(--text);
+      outline-offset: 2px;
+    }
+
+    /* Accessibility: Focus visible styles */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+    }
+    
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 4px;
+      border-radius: 2px;
+    }
+
+    /* Noise overlay */
     body::before {
       content: '';
       position: fixed;
@@ -78,7 +132,7 @@
       background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
     }
 
-    /* ===== TYPOGRAPHY ===== */
+    /* Typography */
     .display {
       font-family: 'Syne', sans-serif;
       font-weight: 800;
@@ -94,7 +148,7 @@
       color: var(--text-muted);
     }
 
-    /* ===== LOADER ===== */
+    /* Loader */
     #loader {
       position: fixed;
       inset: 0;
@@ -143,7 +197,7 @@
       50% { opacity: 1; }
     }
 
-    /* ===== NAV ===== */
+    /* Nav */
     nav {
       position: fixed;
       top: 0;
@@ -154,7 +208,10 @@
       align-items: center;
       z-index: 100;
       mix-blend-mode: difference;
+      pointer-events: none;
     }
+    
+    nav > * { pointer-events: auto; }
     
     .logo {
       font-family: 'Syne', sans-serif;
@@ -176,7 +233,7 @@
     
     .nav-link:hover { opacity: 0.6; }
 
-    /* ===== PROGRESS ===== */
+    /* Progress bar */
     .progress {
       position: fixed;
       top: 0; left: 0;
@@ -187,7 +244,7 @@
       transition: transform 0.1s;
     }
 
-    /* ===== 3D SCENE ===== */
+    /* 3D Scene */
     .scene {
       position: fixed;
       inset: 0;
@@ -200,6 +257,19 @@
       z-index: 0;
     }
     
+    /* Accessibility hint for screen readers */
+    .scene-hint {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
     .core {
       position: relative;
       width: var(--cw);
@@ -208,6 +278,12 @@
       transform: rotateX(calc((var(--my) - 0.5) * -40deg)) 
                  rotateY(calc((var(--mx) - 0.5) * 50deg));
       transition: transform 0.1s linear;
+      cursor: grab;
+      pointer-events: auto;
+    }
+    
+    .core:active {
+      cursor: grabbing;
     }
     
     .plane {
@@ -278,7 +354,7 @@
     .plane:nth-child(5) { width: var(--cw); height: var(--ch); top: 50%; margin-top: calc(var(--ch) / -2); transform: rotateX(90deg) translateZ(calc(var(--cd) / 2)); }
     .plane:nth-child(6) { width: var(--cw); height: var(--ch); top: 50%; margin-top: calc(var(--ch) / -2); transform: rotateX(-90deg) translateZ(calc(var(--cd) / 2)); }
 
-    /* ===== CONTENT ===== */
+    /* Content */
     .content {
       position: relative;
       z-index: 10;
@@ -292,7 +368,7 @@
       justify-content: center;
     }
 
-    /* ===== HERO ===== */
+    /* Hero */
     .hero {
       max-width: 1000px;
     }
@@ -354,6 +430,7 @@
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
+      display: inline-block;
     }
     
     .btn::before {
@@ -391,7 +468,7 @@
       color: var(--bg);
     }
 
-    /* ===== SECTION TITLES ===== */
+    /* Section titles */
     .section-label {
       font-family: 'Space Mono', monospace;
       font-size: 0.65rem;
@@ -404,7 +481,7 @@
       display: inline-block;
     }
 
-    /* ===== GRID SHOWCASE (Secret Level style) ===== */
+    /* Grid showcase */
     .showcase-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -467,7 +544,7 @@
       line-height: 1.6;
     }
 
-    /* ===== SPECS (Oryzo style) ===== */
+    /* Specs */
     .specs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -508,7 +585,54 @@
       line-height: 1.6;
     }
 
-    /* ===== TIERS (Oryzo style) ===== */
+    /* Live Price Ticker */
+    .price-ticker {
+      padding: 1.5rem 2rem;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 3rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.75rem;
+      background: var(--bg-elev);
+      margin: 3rem 0;
+    }
+    
+    .price-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .price-label {
+      color: var(--text-muted);
+    }
+    
+    .price-value {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    
+    .price-change {
+      font-size: 0.65rem;
+    }
+    
+    .price-change.positive {
+      color: var(--accent);
+    }
+    
+    .price-change.negative {
+      color: #ff4444;
+    }
+    
+    .price-loading {
+      color: var(--text-muted);
+      animation: pulse 1.5s infinite;
+    }
+
+    /* Tiers */
     .tiers {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -575,7 +699,7 @@
       border-bottom: none;
     }
 
-    /* ===== MANIFESTO ===== */
+    /* Manifesto */
     .manifesto {
       text-align: center;
       max-width: 800px;
@@ -597,7 +721,7 @@
       font-style: italic;
     }
 
-    /* ===== FOOTER CTA ===== */
+    /* Footer CTA */
     .footer-cta {
       text-align: center;
       padding: 6rem 2rem;
@@ -619,16 +743,17 @@
       margin-right: auto;
     }
 
-    /* ===== RESPONSIVE ===== */
+    /* Responsive */
     @media (max-width: 768px) {
       nav { padding: 1.5rem; }
       .showcase-grid { grid-template-columns: 1fr; }
       .tiers { grid-template-columns: 1fr; }
       .cta-group { flex-direction: column; }
       .btn { width: 100%; text-align: center; }
+      .price-ticker { gap: 1.5rem; padding: 1rem; }
     }
 
-    /* ===== REVEAL ANIMATION ===== */
+    /* Reveal animation */
     .reveal {
       opacity: 0;
       transform: translateY(30px);
@@ -639,11 +764,31 @@
       opacity: 1;
       transform: translateY(0);
     }
+
+    /* Accessibility: High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --border: rgba(255, 255, 255, 0.3);
+        --text-dim: #aaaaaa;
+      }
+      .btn {
+        border-width: 2px;
+      }
+    }
+
+    /* Print styles */
+    @media print {
+      .scene, nav, .progress, #loader { display: none; }
+      body { background: #fff; color: #000; }
+    }
   </style>
 </head>
 <body>
+  <!-- Accessibility: Skip to main content -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
   <!-- Loader -->
-  <div id="loader">
+  <div id="loader" role="status" aria-live="polite" aria-busy="true">
     <div class="loader-content">
       <div class="loader-text">INITIALIZING EMPIRE SYSTEMS</div>
       <div class="loader-bar">
@@ -653,17 +798,17 @@
   </div>
 
   <!-- Progress -->
-  <div class="progress" id="progress"></div>
+  <div class="progress" id="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 
   <!-- Nav -->
-  <nav>
-    <div class="logo">EMPIRE.BORN</div>
-    <a href="#" class="nav-link" onclick="openInstagram(event)">@empire.born</a>
+  <nav role="navigation" aria-label="Main navigation">
+    <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" tabindex="0" role="button" aria-label="Scroll to top">EMPIRE.BORN</div>
+    <a href="https://instagram.com/empire.born" class="nav-link" onclick="openInstagram(event)" aria-label="Follow empire.born on Instagram (opens in new tab)" target="_blank" rel="noopener noreferrer">@empire.born</a>
   </nav>
 
   <!-- 3D Scene -->
-  <div class="scene">
-    <div class="core">
+  <div class="scene" role="img" aria-label="Interactive 3D visualization of dollar bills transforming into gold. Drag to rotate.">
+    <div class="core" id="core3D" tabindex="0" role="button" aria-label="3D object. Drag or use arrow keys to rotate." aria-grabbed="false">
       <div class="plane edge-tex"><div class="gold-edge"></div></div>
       <div class="plane edge-tex"><div class="gold-edge"></div></div>
       <div class="plane edge-tex"><div class="gold-edge"></div></div>
@@ -671,36 +816,37 @@
       <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
       <div class="plane"><div class="dollar-tex"></div><div class="gold-tex"></div></div>
     </div>
+    <div class="scene-hint" aria-hidden="true">Drag to rotate</div>
   </div>
 
   <!-- Content -->
-  <div class="content">
+  <div class="content" id="main-content">
     <!-- Hero -->
-    <section class="hero reveal">
+    <section class="hero reveal" aria-labelledby="hero-heading">
       <div class="hero-label">System v2.0.26</div>
-      <h1 class="display">Wealth<br>Architecture.</h1>
+      <h1 class="display" id="hero-heading">Wealth<br>Architecture.</h1>
       <p class="hero-sub">Not just money. Systems. Structures. Empires. Built for those who refuse to play by someone else's rules.</p>
       <div class="cta-group">
-        <a href="#" class="btn btn-primary" onclick="openInstagram(event)">Join The Empire</a>
+        <a href="https://instagram.com/empire.born" class="btn btn-primary" onclick="openInstagram(event)" target="_blank" rel="noopener noreferrer">Join The Empire</a>
         <a href="#framework" class="btn">Explore Framework</a>
       </div>
     </section>
 
-    <!-- Framework Showcase (Secret Level style) -->
-    <section id="framework" class="reveal">
-      <div class="section-label">The Framework</div>
-      <div class="showcase-grid">
-        <div class="showcase-item">
+    <!-- Framework Showcase -->
+    <section id="framework" class="reveal" aria-labelledby="framework-heading">
+      <div class="section-label" id="framework-heading">The Framework</div>
+      <div class="showcase-grid" role="list">
+        <div class="showcase-item" role="listitem" tabindex="0" aria-label="Cold Logic: Emotion is volatility">
           <div class="showcase-num">01</div>
           <h3 class="showcase-title">Cold Logic</h3>
           <p class="showcase-desc">Emotion is volatility. Volatility is risk. We eliminate risk through pure algorithmic thinking.</p>
         </div>
-        <div class="showcase-item">
+        <div class="showcase-item" role="listitem" tabindex="0" aria-label="Kinetic Force: Momentum isn't created">
           <div class="showcase-num">02</div>
           <h3 class="showcase-title">Kinetic Force</h3>
           <p class="showcase-desc">Momentum isn't created—it's captured. We teach you to harvest energy from chaos.</p>
         </div>
-        <div class="showcase-item">
+        <div class="showcase-item" role="listitem" tabindex="0" aria-label="Infinite Time: Build for centuries">
           <div class="showcase-num">03</div>
           <h3 class="showcase-title">Infinite Time</h3>
           <p class="showcase-desc">Build for centuries, not quarters. Your empire should outlive your biology.</p>
@@ -708,26 +854,54 @@
       </div>
     </section>
 
-    <!-- Specs (Oryzo style) -->
-    <section class="reveal">
-      <div class="section-label">Technical Specifications</div>
-      <div class="specs">
-        <div class="spec-item">
+    <!-- Live Price Ticker -->
+    <section class="reveal" aria-labelledby="prices-heading">
+      <div class="section-label" id="prices-heading">Live Markets</div>
+      <div class="price-ticker" role="status" aria-live="polite" aria-label="Live cryptocurrency and gold prices">
+        <div class="price-item">
+          <span class="price-label">GOLD:</span>
+          <span class="price-value" id="goldPrice" aria-label="Gold price per ounce">
+            <span class="price-loading">Loading...</span>
+          </span>
+          <span class="price-change positive" aria-label="Gold price change">+0.8%</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">BTC:</span>
+          <span class="price-value" id="btcPrice" aria-label="Bitcoin price">
+            <span class="price-loading">Loading...</span>
+          </span>
+          <span class="price-change positive" id="btcChange" aria-label="Bitcoin price change">+2.3%</span>
+        </div>
+        <div class="price-item">
+          <span class="price-label">ETH:</span>
+          <span class="price-value" id="ethPrice" aria-label="Ethereum price">
+            <span class="price-loading">Loading...</span>
+          </span>
+          <span class="price-change negative" id="ethChange" aria-label="Ethereum price change">-1.2%</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Specs -->
+    <section class="reveal" aria-labelledby="specs-heading">
+      <div class="section-label" id="specs-heading">Technical Specifications</div>
+      <div class="specs" role="list">
+        <div class="spec-item" role="listitem">
           <div class="spec-label">Precision</div>
           <div class="spec-value">99.97%</div>
           <div class="spec-desc">Accuracy in execution. The 0.03% is for black swans.</div>
         </div>
-        <div class="spec-item">
+        <div class="spec-item" role="listitem">
           <div class="spec-label">Uptime</div>
           <div class="spec-value">24/7/365</div>
           <div class="spec-desc">Markets never sleep. Neither do we. No cloud required.</div>
         </div>
-        <div class="spec-item">
+        <div class="spec-item" role="listitem">
           <div class="spec-label">ROI Horizon</div>
           <div class="spec-value">∞</div>
           <div class="spec-desc">Infinite. We're building dynasties, not day trades.</div>
         </div>
-        <div class="spec-item">
+        <div class="spec-item" role="listitem">
           <div class="spec-label">Emotional Drag</div>
           <div class="spec-value">0.0</div>
           <div class="spec-desc">Zero. Pure logic. Pure execution. Pure results.</div>
@@ -736,70 +910,70 @@
     </section>
 
     <!-- Manifesto -->
-    <section class="manifesto reveal">
-      <div class="section-label" style="text-align: center; border: none;">The Philosophy</div>
+    <section class="manifesto reveal" aria-labelledby="manifesto-heading">
+      <div class="section-label" id="manifesto-heading" style="text-align: center; border: none;">The Philosophy</div>
       <h2>"Perfection isn't addition. It's subtraction."</h2>
       <p class="manifesto-quote">Remove the noise. Remove the emotion. Remove the doubt. What remains is the system. And the system prints.</p>
     </section>
 
-    <!-- Tiers (Oryzo style) -->
-    <section class="reveal">
-      <div class="section-label">Access Levels</div>
-      <div class="tiers">
-        <div class="tier">
+    <!-- Tiers -->
+    <section class="reveal" aria-labelledby="tiers-heading">
+      <div class="section-label" id="tiers-heading">Access Levels</div>
+      <div class="tiers" role="list">
+        <div class="tier" role="listitem">
           <div class="tier-badge">LEVEL 01</div>
           <h3 class="tier-name">Initiate</h3>
           <p class="tier-desc">Foundation protocols. Learn the architecture before you build it.</p>
-          <ul class="tier-specs">
-            <li><span>Core Systems</span> <span>✓</span></li>
-            <li><span>Logic Framework</span> <span>✓</span></li>
-            <li><span>Community Access</span> <span>✓</span></li>
-            <li><span>Mentorship</span> <span>—</span></li>
-            <li><span>Asset Protocols</span> <span>—</span></li>
+          <ul class="tier-specs" aria-label="Initiate tier features">
+            <li><span>Core Systems</span> <span aria-label="Included">✓</span></li>
+            <li><span>Logic Framework</span> <span aria-label="Included">✓</span></li>
+            <li><span>Community Access</span> <span aria-label="Included">✓</span></li>
+            <li><span>Mentorship</span> <span aria-label="Not included">—</span></li>
+            <li><span>Asset Protocols</span> <span aria-label="Not included">—</span></li>
           </ul>
         </div>
-        <div class="tier">
+        <div class="tier" role="listitem">
           <div class="tier-badge featured">LEVEL 02</div>
           <h3 class="tier-name">Architect</h3>
           <p class="tier-desc">Advanced deployment. Direct access. Real-time optimization.</p>
-          <ul class="tier-specs">
-            <li><span>Core Systems</span> <span>✓</span></li>
-            <li><span>Logic Framework</span> <span>✓</span></li>
-            <li><span>Community Access</span> <span>✓</span></li>
-            <li><span>Mentorship</span> <span>✓</span></li>
-            <li><span>Asset Protocols</span> <span>✓</span></li>
+          <ul class="tier-specs" aria-label="Architect tier features">
+            <li><span>Core Systems</span> <span aria-label="Included">✓</span></li>
+            <li><span>Logic Framework</span> <span aria-label="Included">✓</span></li>
+            <li><span>Community Access</span> <span aria-label="Included">✓</span></li>
+            <li><span>Mentorship</span> <span aria-label="Included">✓</span></li>
+            <li><span>Asset Protocols</span> <span aria-label="Included">✓</span></li>
           </ul>
         </div>
-        <div class="tier">
+        <div class="tier" role="listitem">
           <div class="tier-badge">LEVEL 03</div>
           <h3 class="tier-name">Sovereign</h3>
           <p class="tier-desc">Complete blueprint. Generational systems. Legacy architecture.</p>
-          <ul class="tier-specs">
-            <li><span>Everything</span> <span>✓</span></li>
-            <li><span>Legacy Planning</span> <span>✓</span></li>
-            <li><span>Direct Line</span> <span>✓</span></li>
-            <li><span>Custom Systems</span> <span>✓</span></li>
-            <li><span>Lifetime Access</span> <span>✓</span></li>
+          <ul class="tier-specs" aria-label="Sovereign tier features">
+            <li><span>Everything</span> <span aria-label="Included">✓</span></li>
+            <li><span>Legacy Planning</span> <span aria-label="Included">✓</span></li>
+            <li><span>Direct Line</span> <span aria-label="Included">✓</span></li>
+            <li><span>Custom Systems</span> <span aria-label="Included">✓</span></li>
+            <li><span>Lifetime Access</span> <span aria-label="Included">✓</span></li>
           </ul>
         </div>
       </div>
     </section>
 
     <!-- Final CTA -->
-    <section class="footer-cta reveal">
-      <h2 class="display">Ready to<br>Build?</h2>
+    <section class="footer-cta reveal" aria-labelledby="cta-heading">
+      <h2 class="display" id="cta-heading">Ready to<br>Build?</h2>
       <p>The empire doesn't build itself. But we'll give you the blueprint.</p>
       <div class="cta-group" style="justify-content: center;">
-        <a href="#" class="btn btn-primary" onclick="openInstagram(event)">Enter @empire.born</a>
+        <a href="https://instagram.com/empire.born" class="btn btn-primary" onclick="openInstagram(event)" target="_blank" rel="noopener noreferrer">Enter @empire.born</a>
       </div>
       <div style="margin-top: 4rem;">
-        <div class="mono">System Status: <span style="color: var(--accent);">Online</span></div>
+        <div class="mono">System Status: <span style="color: var(--accent);" role="status" aria-live="polite">Online</span></div>
       </div>
     </section>
   </div>
 
   <script>
-    // Instagram Deep Link
+    // ===== INSTAGRAM DEEP LINKING =====
     function openInstagram(e) {
       e.preventDefault();
       const url = 'https://instagram.com/empire.born';
@@ -820,7 +994,7 @@
       }
     }
 
-    // Loader
+    // ===== LOADER =====
     let progress = 0;
     const loaderFill = document.getElementById('loaderFill');
     const loader = document.getElementById('loader');
@@ -830,21 +1004,182 @@
       if (progress >= 100) {
         progress = 100;
         clearInterval(interval);
-        setTimeout(() => loader.classList.add('hide'), 500);
+        setTimeout(() => {
+          loader.classList.add('hide');
+          loader.setAttribute('aria-busy', 'false');
+        }, 500);
       }
       loaderFill.style.width = progress + '%';
     }, 100);
 
-    // Scroll Progress & Morph
+    // ===== LIVE PRICE TICKER =====
+    async function updatePrices() {
+      try {
+        const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+        
+        if (!response.ok) throw new Error('API rate limit');
+        
+        const data = await response.json();
+        
+        // Update BTC
+        const btcPrice = document.getElementById('btcPrice');
+        const btcChange = document.getElementById('btcChange');
+        btcPrice.textContent = `$${data.bitcoin.usd.toLocaleString()}`;
+        const btcChangeVal = data.bitcoin.usd_24h_change.toFixed(2);
+        btcChange.textContent = `${btcChangeVal > 0 ? '+' : ''}${btcChangeVal}%`;
+        btcChange.className = `price-change ${btcChangeVal >= 0 ? 'positive' : 'negative'}`;
+        
+        // Update ETH
+        const ethPrice = document.getElementById('ethPrice');
+        const ethChange = document.getElementById('ethChange');
+        ethPrice.textContent = `$${data.ethereum.usd.toLocaleString()}`;
+        const ethChangeVal = data.ethereum.usd_24h_change.toFixed(2);
+        ethChange.textContent = `${ethChangeVal > 0 ? '+' : ''}${ethChangeVal}%`;
+        ethChange.className = `price-change ${ethChangeVal >= 0 ? 'positive' : 'negative'}`;
+        
+        // Gold price (static fallback - in production use a gold API)
+        document.getElementById('goldPrice').textContent = '$2,347.80/oz';
+        
+      } catch (error) {
+        // Fallback values if API fails
+        document.getElementById('goldPrice').textContent = '$2,347.80/oz';
+        document.getElementById('btcPrice').textContent = '$67,234';
+        document.getElementById('ethPrice').textContent = '$3,421';
+        console.log('Using fallback prices');
+      }
+    }
+    
+    // Initial load and update every 60 seconds
+    updatePrices();
+    setInterval(updatePrices, 60000);
+
+    // ===== INTERACTIVE 3D DRAG CONTROLS =====
+    const core = document.getElementById('core3D');
+    let isDragging = false;
+    let startX, startY;
+    let currentRotX = 0.5;
+    let currentRotY = 0.5;
+    let animationId = null;
+
+    // Utility: Clamp value between min and max
+    function clamp(value, min, max) {
+      return Math.min(Math.max(value, min), max);
+    }
+
+    // Smooth interpolation
+    function lerp(start, end, factor) {
+      return start + (end - start) * factor;
+    }
+
+    // Start drag
+    function handleStart(clientX, clientY) {
+      isDragging = true;
+      startX = clientX;
+      startY = clientY;
+      core.setAttribute('aria-grabbed', 'true');
+      core.style.transition = 'none';
+      if (animationId) cancelAnimationFrame(animationId);
+    }
+
+    // End drag
+    function handleEnd() {
+      isDragging = false;
+      core.setAttribute('aria-grabbed', 'false');
+      core.style.transition = 'transform 0.1s linear';
+    }
+
+    // Handle drag movement
+    function handleMove(clientX, clientY) {
+      if (!isDragging) return;
+      
+      const deltaX = (clientX - startX) / window.innerWidth;
+      const deltaY = (clientY - startY) / window.innerHeight;
+      
+      currentRotY = clamp(currentRotY + deltaX * 0.5, 0, 1);
+      currentRotX = clamp(currentRotX - deltaY * 0.5, 0, 1);
+      
+      startX = clientX;
+      startY = clientY;
+      
+      // Update CSS variables
+      document.body.style.setProperty('--mx', currentRotY.toFixed(3));
+      document.body.style.setProperty('--my', currentRotX.toFixed(3));
+      
+      // Continue animation loop
+      animationId = requestAnimationFrame(() => {});
+    }
+
+    // Mouse events
+    core.addEventListener('mousedown', (e) => {
+      handleStart(e.clientX, e.clientY);
+      e.preventDefault();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      handleMove(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mouseup', handleEnd);
+
+    // Touch events (with passive: false for preventDefault)
+    core.addEventListener('touchstart', (e) => {
+      handleStart(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: false });
+
+    window.addEventListener('touchmove', (e) => {
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    }, { passive: true });
+
+    window.addEventListener('touchend', handleEnd);
+
+    // Keyboard accessibility for 3D rotation
+    core.addEventListener('keydown', (e) => {
+      const step = 0.05;
+      switch(e.key) {
+        case 'ArrowUp':
+          currentRotX = clamp(currentRotX - step, 0, 1);
+          e.preventDefault();
+          break;
+        case 'ArrowDown':
+          currentRotX = clamp(currentRotX + step, 0, 1);
+          e.preventDefault();
+          break;
+        case 'ArrowLeft':
+          currentRotY = clamp(currentRotY - step, 0, 1);
+          e.preventDefault();
+          break;
+        case 'ArrowRight':
+          currentRotY = clamp(currentRotY + step, 0, 1);
+          e.preventDefault();
+          break;
+        default:
+          return;
+      }
+      document.body.style.setProperty('--mx', currentRotY.toFixed(3));
+      document.body.style.setProperty('--my', currentRotX.toFixed(3));
+    });
+
+    // ===== SCROLL PROGRESS & MORPH =====
     let ticking = false;
+    
     function updateScroll() {
       const scroll = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scroll / maxScroll;
+      const scrollProgress = scroll / maxScroll;
       
-      document.getElementById('progress').style.transform = `scaleX(${progress})`;
+      // Update progress bar
+      const progressBar = document.getElementById('progress');
+      progressBar.style.transform = `scaleX(${scrollProgress})`;
+      progressBar.setAttribute('aria-valuenow', Math.round(scrollProgress * 100));
+      
+      // Update morph
       document.body.style.setProperty('--scroll', scroll);
-      document.body.style.setProperty('--morph', Math.min(progress * 1.5, 1));
+      document.body.style.setProperty('--morph', Math.min(scrollProgress * 1.5, 1));
       
       ticking = false;
     }
@@ -856,26 +1191,39 @@
       }
     }, { passive: true });
 
-    // Mouse Tracking
-    let mouseX = 0.5, mouseY = 0.5;
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX / window.innerWidth;
-      mouseY = e.clientY / window.innerHeight;
-      document.body.style.setProperty('--mx', mouseX);
-      document.body.style.setProperty('--my', mouseY);
-    }, { passive: true });
-
-    // Reveal on Scroll
+    // ===== REVEAL ON SCROLL =====
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('active');
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
     
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ===== AUTO-ROTATE 3D WHEN NOT INTERACTING =====
+    let autoRotate = true;
+    let autoRotateAngle = 0;
     
+    function autoRotate3D() {
+      if (autoRotate && !isDragging) {
+        autoRotateAngle += 0.002;
+        currentRotY = 0.5 + Math.sin(autoRotateAngle) * 0.2;
+        currentRotX = 0.5 + Math.cos(autoRotateAngle * 0.7) * 0.15;
+        
+        document.body.style.setProperty('--mx', currentRotY.toFixed(3));
+        document.body.style.setProperty('--my', currentRotX.toFixed(3));
+      }
+      requestAnimationFrame(autoRotate3D);
+    }
+    autoRotate3D();
+
+    // Stop auto-rotate on interaction
+    document.addEventListener('mousedown', () => autoRotate = false);
+    document.addEventListener('touchstart', () => autoRotate = false, { passive: true });
+
+    // Initialize
     updateScroll();
   </script>
 </body>
